@@ -1,4 +1,4 @@
-package com.example.dbm.inventoryappkt.ui.theme
+package com.example.dbm.inventoryappkt.presentation.view.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
