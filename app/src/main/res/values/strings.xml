@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">InventoryAppKt</string>
+    <string name="loading_products">Loading Products…</string>
+    <string name="loading_product_details">Loading Product Details…</string>
+    <string name="loading_adding_product">Adding product…</string>
+    <string name="loading_deleting_product">Removing product…</string>
+    <string name="loading_updating_product">Updating product…</string>
+    <string name="currency_unit">$</string>
+    <string name="weight_unit">kg</string>
+    <string name="go_back_content_description">Go back</string>
+    <string name="more_options_content_description">More options</string>
+    <string name="insert_dummy_product">Insert Dummy Product</string>
 </resources>
