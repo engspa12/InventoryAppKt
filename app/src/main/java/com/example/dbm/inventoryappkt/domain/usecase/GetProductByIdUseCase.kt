@@ -13,6 +13,7 @@ interface IGetProductByIdUseCase {
 class GetProductByIdUseCase @Inject constructor(
     private val productsRepository: IProductsRepository
 ): IGetProductByIdUseCase {
+
     override suspend fun invoke(productId: Int): ProductDomain {
         return productsRepository.getProductById(productId)
     }

@@ -19,6 +19,13 @@ object UseCasesModule {
     }
 
     @Provides
+    fun provideGetProductByIdUseCase(
+        productsRepository: IProductsRepository
+    ): IGetProductByIdUseCase {
+        return GetProductByIdUseCase(productsRepository)
+    }
+
+    @Provides
     fun provideAddProductUseCase(
         productsRepository: IProductsRepository
     ): IAddProductUseCase {
