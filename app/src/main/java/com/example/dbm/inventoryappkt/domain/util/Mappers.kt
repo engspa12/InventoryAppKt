@@ -15,7 +15,8 @@ fun ProductDomain.toListView(): ProductListView {
         productName = this.name,
         productQuantity = this.quantity,
         productPrice = this.price,
-        productUrlImage = this.imageUrl
+        productUrlImage = this.imageUrl,
+        isDummyProduct = this.isDummyProduct
     )
 }
 
@@ -31,6 +32,7 @@ fun ProductDomain.toDetailsView(): ProductDetailsView {
         productInStock = this.inStock,
         productName = this.name,
         productType = this.type,
-        productImageUrl = this.imageUrl
+        productImageUrl = this.imageUrl,
+        isDummyProduct = this.isDummyProduct
     )
 }

@@ -1,7 +1,7 @@
 package com.example.dbm.inventoryappkt.domain.model
 
 data class ProductDomain(
-    val id: Int,
+    var id: Int = -1,
     val brand: String,
     val warranty: Int,
     val manufactureYear: String,
@@ -12,5 +12,6 @@ data class ProductDomain(
     val name: String,
     val type: Int,
     val imageUrl: String,
-    val imageUrlStorageLocation: String
+    val imageUrlStorageLocation: String,
+    val isDummyProduct: Boolean
 )

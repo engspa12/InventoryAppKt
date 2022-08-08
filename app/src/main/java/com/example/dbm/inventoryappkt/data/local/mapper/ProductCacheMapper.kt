@@ -19,13 +19,13 @@ class ProductCacheMapper: CacheMapper<ProductCache, ProductDomain> {
             name = dto.name,
             type = dto.type,
             imageUrl = dto.imageUrl,
-            imageUrlStorageLocation = dto.imageUrlStorageLocation
+            imageUrlStorageLocation = dto.imageUrlStorageLocation,
+            isDummyProduct = dto.isDummyProduct
         )
     }
 
     override fun mapFromDomainModel(domainModel: ProductDomain): ProductCache {
         return ProductCache(
-            id = domainModel.id,
             brand = domainModel.brand,
             warranty = domainModel.warranty,
             manufactureYear = domainModel.manufactureYear,
@@ -36,7 +36,8 @@ class ProductCacheMapper: CacheMapper<ProductCache, ProductDomain> {
             name = domainModel.name,
             type = domainModel.type,
             imageUrl = domainModel.imageUrl,
-            imageUrlStorageLocation = domainModel.imageUrlStorageLocation
+            imageUrlStorageLocation = domainModel.imageUrlStorageLocation,
+            isDummyProduct = domainModel.isDummyProduct
         )
     }
 

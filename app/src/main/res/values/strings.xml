@@ -10,4 +10,8 @@
     <string name="go_back_content_description">Go back</string>
     <string name="more_options_content_description">More options</string>
     <string name="insert_dummy_product">Insert Dummy Product</string>
+    <string name="save_product_content_description">Save Product</string>
+    <string name="empty_list_message">You do not have products in your inventory.\n\nUse the plus button to add an item or the menu button to insert a dummy one.</string>
+    <string name="error_retrieving_data">An error occurred while retrieving the products data</string>
+    <string name="add_product_content_description">Add New Product</string>
 </resources>

@@ -26,6 +26,24 @@ class ProductsService @Inject constructor(
         return getProductByIdUseCase(productId = productId).toDetailsView()
     }
 
+    override suspend fun insertDummyProduct() {
+        val productDomain = ProductDomain(
+            brand = "Brand",
+            warranty = 180,
+            manufactureYear = "DBM",
+            weight = 5.0,
+            price = 25.0,
+            quantity = 10,
+            inStock = true,
+            name = "Name",
+            type = 3,
+            imageUrl = "",
+            imageUrlStorageLocation = "",
+            isDummyProduct = true
+        )
+        addProductUseCase(product = productDomain)
+    }
+
     override suspend fun addProduct(productId: Int) {
         //addProductUseCase()
     }

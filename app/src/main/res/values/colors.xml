@@ -7,8 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="main_background">#47a64a</color>
-    <color name="item_background">#2c662e</color>
-    <color name="button_background">#DD4455</color>
-    <color name="main_screen_background">#3177A3</color>
+    <color name="details_screen_background">#47a64a</color>
+    <color name="item_details_background">#2c662e</color>
+    <color name="regular_button_background">#DD4455</color>
+    <color name="new_sale_button_background">#DD4561</color>
+    <color name="main_screen_empty_background">#3177A3</color>
+    <color name="main_screen_full_background">#4DB6AC</color>
+    <color name="item_list_background">#9224A6</color>
 </resources>
