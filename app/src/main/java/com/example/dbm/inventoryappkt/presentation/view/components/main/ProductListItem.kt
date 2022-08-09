@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
@@ -41,7 +42,7 @@ fun ProductListItem(
                     .requiredSize(70.dp),
                 alignment = Alignment.Center,
                 painter = painterResource(id = R.drawable.clothing),
-                contentDescription = "No image"
+                contentDescription = stringResource(id = R.string.dummy_image_content_description)
             )
         } else {
             GlideImage(

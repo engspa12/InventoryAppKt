@@ -38,7 +38,7 @@ fun App(
     var navigationType by rememberSaveable { mutableStateOf(Constants.NavType.NAV_MAIN) }
     var saveProductDetails by remember { mutableStateOf(false) }
     var insertDummyProduct by remember { mutableStateOf(false) }
-    var loadingScreenContent by remember { mutableStateOf(false) }
+    var loadingScreenContent by remember { mutableStateOf(true) }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -67,10 +67,10 @@ fun App(
             )
         },
         floatingActionButton = {
-            if(!loadingScreenContent){
+            if(!loadingScreenContent && navigationType == Constants.NavType.NAV_MAIN){
                 FloatingActionButton(
                     onClick = {
-                        navController.navigate(Screen.ProductScreen.route)
+                        navController.navigate(Screen.ProductScreen.withArgs(-1))
                     },
                     backgroundColor = colorResource(id = R.color.regular_button_background)
                 ) {
@@ -124,7 +124,7 @@ fun App(
                         context = context,
                         productId = backStackEntry.arguments?.getInt("productId") ?: -1,
                         viewModel = productDetailsViewModel,
-                        saveProduct = saveProductDetails,
+                        saveProductDetails = saveProductDetails,
                         onSavedProduct = {
                             saveProductDetails = false
                         }

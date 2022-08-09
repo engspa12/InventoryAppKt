@@ -50,7 +50,7 @@ fun ProductsList(
                 modifier = modifier
                     .fillMaxSize()
                     .background(color = colorResource(id = R.color.main_screen_full_background))
-                    .padding(top = 2.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+                    .padding(top = 2.dp, bottom = 12.dp, start = 10.dp, end = 10.dp)
             ){
                 itemsIndexed(list, key = { _ , listItem ->
                     listItem.productId
