@@ -84,7 +84,7 @@ fun InputFieldHorizontal(
                     interactionSource = remember { MutableInteractionSource() },
                     singleLine = true,
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = colorResource(id = R.color.details_screen_background),
+                        backgroundColor = colorResource(id = R.color.add_new_product_screen_background),
                         focusedIndicatorColor = colorResource(id = R.color.white),
                         cursorColor = colorResource(id = R.color.white)
                     ),

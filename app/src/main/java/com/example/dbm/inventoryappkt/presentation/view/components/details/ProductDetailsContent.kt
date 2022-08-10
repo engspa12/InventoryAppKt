@@ -24,7 +24,7 @@ fun ProductDetailsContent(
     item: ProductDetailsView,
     onIncreaseQuantity: () -> Unit,
     onDecreaseQuantity: () -> Unit,
-    onRequestToSupplier: () -> Unit,
+    onRequestToSupplier: (ProductDetailsView) -> Unit,
     onDeleteProduct: () -> Unit
 ) {
     LazyColumn(
@@ -177,7 +177,7 @@ fun ProductDetailsContent(
                 )
                 SupplierOrderButton(
                     onRequestToSupplier = {
-                       onRequestToSupplier()
+                       onRequestToSupplier(item)
                     },
                     modifier = Modifier
                         .padding(start = 5.dp, end = 10.dp)

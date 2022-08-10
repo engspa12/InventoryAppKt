@@ -1,6 +1,8 @@
 package com.example.dbm.inventoryappkt.presentation.view.screens
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -54,8 +56,27 @@ fun ProductDetailsScreen(
                     onDecreaseQuantity = {
 
                     },
-                    onRequestToSupplier = {
+                    onRequestToSupplier = { productDetails ->
+                        val quantity = productDetails.productQuantity
+                        val addresses = Array(1) {
+                            "arturo.lpc12@gmail.com"
+                        }
+                        val brand = productDetails.productBrand
+                        val name = productDetails.productName
+                        val price = productDetails.productPrice
 
+                        val currencyAbbreviation = context.getString(R.string.currency_abbreviation)
+                        val message = context.getString(R.string.message_email, quantity, name, brand, price, currencyAbbreviation)
+
+                        val intent = Intent(Intent.ACTION_SENDTO)
+                        intent.data = Uri.parse("mailto:")
+                        intent.putExtra(Intent.EXTRA_EMAIL, addresses)
+                        intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.subject_email))
+                        intent.putExtra(Intent.EXTRA_TEXT, message)
+
+                        if (intent.resolveActivity(context.packageManager) != null) {
+                            context.startActivity(intent)
+                        }
                     }) {
                 }
             }

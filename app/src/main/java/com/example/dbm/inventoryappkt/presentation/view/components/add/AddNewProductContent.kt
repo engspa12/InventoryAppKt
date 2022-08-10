@@ -34,7 +34,7 @@ fun AddNewProductContent(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorResource(id = R.color.details_screen_background))
+            .background(color = colorResource(id = R.color.add_new_product_screen_background))
             .padding(top = 2.dp, bottom = 12.dp, start = 10.dp, end = 10.dp)
     ) {
         item {
@@ -54,7 +54,7 @@ fun AddNewProductContent(
                     .padding(top = 10.dp)
                     .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)
                     .height(IntrinsicSize.Max)
-                    .background(color = colorResource(id = R.color.item_details_background))
+                    .background(color = colorResource(id = R.color.item_add_new_product_background))
             ) {
                 Column(
                     modifier = Modifier
@@ -175,7 +175,7 @@ fun AddNewProductContent(
                     .padding(top = 10.dp)
                     .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)
                     .requiredHeight(60.dp)
-                    .background(color = colorResource(id = R.color.item_details_background))
+                    .background(color = colorResource(id = R.color.item_add_new_product_background))
             )
         }
         item {
@@ -192,7 +192,7 @@ fun AddNewProductContent(
                     .padding(top = 10.dp)
                     .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)
                     .requiredHeight(60.dp)
-                    .background(color = colorResource(id = R.color.item_details_background))
+                    .background(color = colorResource(id = R.color.item_add_new_product_background))
             )
         }
         item {
@@ -212,7 +212,7 @@ fun AddNewProductContent(
                     .padding(top = 10.dp)
                     .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)
                     .requiredHeight(60.dp)
-                    .background(color = colorResource(id = R.color.item_details_background))
+                    .background(color = colorResource(id = R.color.item_add_new_product_background))
             )
         }
     }

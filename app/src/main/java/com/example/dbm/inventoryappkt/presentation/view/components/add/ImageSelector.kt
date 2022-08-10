@@ -25,7 +25,7 @@ fun ImageSelector(
 ){
     Row(
         modifier = modifier
-            .background(color = colorResource(id = R.color.item_details_background)),
+            .background(color = colorResource(id = R.color.item_add_new_product_background)),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(

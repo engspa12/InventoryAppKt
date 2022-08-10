@@ -9,6 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="details_screen_background">#47a64a</color>
     <color name="item_details_background">#2c662e</color>
+    <color name="add_new_product_screen_background">#475CA6</color>
+    <color name="item_add_new_product_background">#2C4666</color>
     <color name="regular_button_background">#DD4455</color>
     <color name="new_sale_button_background">#DD4561</color>
     <color name="main_screen_empty_background">#3177A3</color>

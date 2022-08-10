@@ -6,6 +6,7 @@
     <string name="loading_deleting_product">Removing product…</string>
     <string name="loading_updating_product">Updating product…</string>
     <string name="currency_unit">$</string>
+    <string name="currency_abbreviation">USD</string>
     <string name="weight_unit">kg</string>
     <string name="go_back_content_description">Go back</string>
     <string name="more_options_content_description">More options</string>
@@ -46,4 +47,6 @@
     <string name="other_category">Other</string>
     <string name="in_stock_status">In Stock</string>
     <string name="without_stock_status">Without Stock</string>
+    <string name="subject_email">Supply Order</string>
+    <string name="message_email">Dear Provider,\n\nWe need %1$d more items from the product with the following details:\n\nName: %2$s\nBrand: %3$s\nPrice: %4$.2f %5$s\n\nThank you for your attention. I\'m looking forward to hearing from you.\n\nRegards"</string>
 </resources>
