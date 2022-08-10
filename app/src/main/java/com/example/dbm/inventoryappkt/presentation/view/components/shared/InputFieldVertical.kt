@@ -1,4 +1,4 @@
-package com.example.dbm.inventoryappkt.presentation.view.components.details
+package com.example.dbm.inventoryappkt.presentation.view.components.shared
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column

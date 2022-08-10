@@ -6,6 +6,7 @@ import com.example.dbm.inventoryappkt.domain.util.toDetailsView
 import com.example.dbm.inventoryappkt.domain.util.toListView
 import com.example.dbm.inventoryappkt.presentation.model.ProductDetailsView
 import com.example.dbm.inventoryappkt.presentation.model.ProductListView
+import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
 import javax.inject.Inject
 
 class ProductsService @Inject constructor(
@@ -28,15 +29,15 @@ class ProductsService @Inject constructor(
 
     override suspend fun insertDummyProduct() {
         val productDomain = ProductDomain(
-            brand = "Brand",
+            brand = "DBM",
             warranty = 180,
-            manufactureYear = "DBM",
-            weight = 5.0,
+            manufactureYear = 2022,
+            weight = 0.15,
             price = 25.0,
             quantity = 10,
             inStock = true,
-            name = "Name",
-            type = 3,
+            name = "Men's Shirt",
+            type = "Clothing",
             imageUrl = "",
             imageUrlStorageLocation = "",
             isDummyProduct = true
@@ -44,8 +45,9 @@ class ProductsService @Inject constructor(
         addProductUseCase(product = productDomain)
     }
 
-    override suspend fun addProduct(productId: Int) {
+    override suspend fun addProduct(product: ProductInputState) : String {
         //addProductUseCase()
+        return "Success"
     }
 
     override suspend fun updateProduct(productId: Int) {

@@ -1,0 +1,219 @@
+package com.example.dbm.inventoryappkt.presentation.view.components.add
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.dbm.inventoryappkt.R
+import com.example.dbm.inventoryappkt.presentation.util.ProductChangeEvent
+import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
+import com.example.dbm.inventoryappkt.presentation.view.components.shared.InputFieldHorizontal
+import com.example.dbm.inventoryappkt.presentation.view.components.shared.InputFieldVertical
+import com.example.dbm.inventoryappkt.presentation.view.components.shared.SpinnerHorizontal
+
+@Composable
+fun AddNewProductContent(
+    inputState: ProductInputState,
+    onChangeEvent: (ProductChangeEvent) -> Unit,
+    onSelectImageButtonClicked: () -> Unit,
+    listStockOptions: List<String>,
+    listCategoryOptions: List<String>
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = colorResource(id = R.color.details_screen_background))
+            .padding(top = 2.dp, bottom = 12.dp, start = 10.dp, end = 10.dp)
+    ) {
+        item {
+            ImageSelector(
+                onSelectImageButtonClicked = {
+                    onSelectImageButtonClicked()
+                },
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)
+                    .requiredHeight(120.dp)
+            )
+        }
+        item {
+            Row(
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)
+                    .height(IntrinsicSize.Max)
+                    .background(color = colorResource(id = R.color.item_details_background))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(top = 10.dp),
+                    horizontalAlignment = Alignment.Start,
+                ) {
+                    InputFieldVertical(
+                        text = stringResource(id = R.string.name),
+                        placeholder = stringResource(id = R.string.name_placeholder),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W600,
+                        inputValue = inputState.productName,
+                        onInputValueChanged = {
+                            onChangeEvent(ProductChangeEvent.NameChanged(it))
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            capitalization = KeyboardCapitalization.Words,
+                            keyboardType = KeyboardType.Text
+                        )
+                    )
+                    InputFieldVertical(
+                        text = stringResource(id = R.string.price),
+                        placeholder = stringResource(id = R.string.price_placeholder),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W600,
+                        inputValue = inputState.productPrice,
+                        onInputValueChanged = {
+                            onChangeEvent(ProductChangeEvent.PriceChanged(it))
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number
+                        )
+                    )
+                    InputFieldVertical(
+                        text = stringResource(id = R.string.manufacture_year),
+                        placeholder = stringResource(id = R.string.manufacture_year_placeholder),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W600,
+                        inputValue = inputState.productManufactureYear,
+                        onInputValueChanged = {
+                            onChangeEvent(ProductChangeEvent.ManufactureYearChanged(it))
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number
+                        )
+                    )
+                }
+                Spacer(
+                    modifier = Modifier
+                        .padding(vertical = 16.dp, horizontal = 10.dp)
+                        .fillMaxHeight()
+                        .requiredWidth(2.dp)
+                        .background(color = MaterialTheme.colors.onPrimary)
+                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(top = 10.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    InputFieldVertical(
+                        text = stringResource(id = R.string.quantity),
+                        placeholder = stringResource(id = R.string.quantity_placeholder),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W600,
+                        inputValue = inputState.productQuantity,
+                        onInputValueChanged = {
+                            onChangeEvent(ProductChangeEvent.QuantityChanged(it))
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            capitalization = KeyboardCapitalization.Words,
+                            keyboardType = KeyboardType.Number
+                        )
+                    )
+                    InputFieldVertical(
+                        text = stringResource(id = R.string.brand),
+                        placeholder = stringResource(id = R.string.brand_placeholder),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W600,
+                        inputValue = inputState.productBrand,
+                        onInputValueChanged = {
+                            onChangeEvent(ProductChangeEvent.BrandChanged(it))
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            capitalization = KeyboardCapitalization.Words,
+                            keyboardType = KeyboardType.Text
+                        )
+                    )
+                    InputFieldVertical(
+                        text = stringResource(id = R.string.weight),
+                        placeholder = stringResource(id = R.string.weight_placeholder),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W600,
+                        inputValue = inputState.productWeight,
+                        onInputValueChanged = {
+                            onChangeEvent(ProductChangeEvent.WeightChanged(it))
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            capitalization = KeyboardCapitalization.Words,
+                            keyboardType = KeyboardType.Number
+                        )
+                    )
+                }
+            }
+        }
+        item {
+            SpinnerHorizontal(
+                text = stringResource(id = R.string.product_type),
+                options = listCategoryOptions,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.W600,
+                itemSelected = inputState.productType,
+                onItemSelected = {
+                    onChangeEvent(ProductChangeEvent.TypeChanged(it))
+                },
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)
+                    .requiredHeight(60.dp)
+                    .background(color = colorResource(id = R.color.item_details_background))
+            )
+        }
+        item {
+            SpinnerHorizontal(
+                text = stringResource(id = R.string.stock_status),
+                options = listStockOptions,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.W600,
+                itemSelected = inputState.productStockStatus,
+                onItemSelected = {
+                    onChangeEvent(ProductChangeEvent.StockStatusChanged(it))
+                },
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)
+                    .requiredHeight(60.dp)
+                    .background(color = colorResource(id = R.color.item_details_background))
+            )
+        }
+        item {
+            InputFieldHorizontal(
+                text = stringResource(id = R.string.warranty),
+                placeholder = stringResource(id = R.string.warranty_placeholder),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.W600,
+                inputValue = inputState.productWarranty,
+                onInputValueChanged = {
+                    onChangeEvent(ProductChangeEvent.WarrantyChanged(it))
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number
+                ),
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)
+                    .requiredHeight(60.dp)
+                    .background(color = colorResource(id = R.color.item_details_background))
+            )
+        }
+    }
+}

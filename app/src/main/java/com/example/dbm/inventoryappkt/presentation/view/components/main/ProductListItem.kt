@@ -26,7 +26,7 @@ import com.skydoves.landscapist.glide.GlideImage
 fun ProductListItem(
     listItem: ProductListView,
     onItemClicked: () -> Unit,
-    onItemNewSale: () -> Unit,
+    onNewSaleClicked: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Row(
@@ -73,12 +73,18 @@ fun ProductListItem(
                 .fillMaxHeight()
                 .requiredWidth(2.dp)
                 .background(color = MaterialTheme.colors.onPrimary)
+                .clickable {
+                    onItemClicked()
+                }
         )
         Column(
             modifier = Modifier
                 .fillMaxHeight()
                 .padding(horizontal = 10.dp)
-                .weight(1f),
+                .weight(1f)
+                .clickable {
+                    onItemClicked()
+                },
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.Start
         ) {
@@ -93,7 +99,7 @@ fun ProductListItem(
                 .background(color = colorResource(id = R.color.new_sale_button_background))
                 .padding(horizontal = 10.dp)
                 .clickable {
-                    onItemNewSale()
+                    onNewSaleClicked()
                 },
             contentAlignment = Alignment.Center
         ) {

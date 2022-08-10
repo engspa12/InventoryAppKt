@@ -19,13 +19,17 @@ import com.example.dbm.inventoryappkt.R
 
 @Composable
 fun QuantityEditor(
+    onIncreaseQuantity: () -> Unit,
+    onDecreaseQuantity: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Row(
         modifier = modifier
     ) {
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                onIncreaseQuantity()
+                      },
             modifier = Modifier
                 .padding(start = 10.dp, end = 5.dp)
                 .border(width = 2.dp, color = MaterialTheme.colors.onPrimary, shape = RoundedCornerShape(18.dp))
@@ -42,7 +46,9 @@ fun QuantityEditor(
             )
         }
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                onDecreaseQuantity()
+                      },
             modifier = Modifier
                 .padding(start = 5.dp, end = 5.dp)
                 .border(width = 2.dp, color = MaterialTheme.colors.onPrimary, shape = RoundedCornerShape(18.dp))

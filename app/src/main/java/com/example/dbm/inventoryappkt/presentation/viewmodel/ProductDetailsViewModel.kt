@@ -31,13 +31,6 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
-    fun addProduct(productId: Int) {
-        showProgressBar(R.string.loading_adding_product)
-        viewModelScope.launch(mainDispatcher) {
-            productsService.addProduct(productId)
-        }
-    }
-
     fun deleteProduct(productId: Int){
         showProgressBar(R.string.loading_deleting_product)
         viewModelScope.launch(mainDispatcher) {

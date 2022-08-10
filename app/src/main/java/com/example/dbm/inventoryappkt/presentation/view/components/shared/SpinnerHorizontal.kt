@@ -1,4 +1,4 @@
-package com.example.dbm.inventoryappkt.presentation.view.components.details
+package com.example.dbm.inventoryappkt.presentation.view.components.shared
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

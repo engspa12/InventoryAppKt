@@ -1,4 +1,4 @@
-package com.example.dbm.inventoryappkt.presentation.view.components.details
+package com.example.dbm.inventoryappkt.presentation.view.components.add
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,6 +20,7 @@ import com.example.dbm.inventoryappkt.R
 
 @Composable
 fun ImageSelector(
+    onSelectImageButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Row(
@@ -42,7 +43,9 @@ fun ImageSelector(
                 .border(width = 2.dp, color = MaterialTheme.colors.onPrimary, shape = RoundedCornerShape(18.dp))
                 .height(50.dp)
                 .weight(3f),
-            onClick = { /*TODO*/ },
+            onClick = {
+                onSelectImageButtonClicked()
+            },
             shape = RoundedCornerShape(18.dp),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = colorResource(id = R.color.regular_button_background)

@@ -15,19 +15,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dbm.inventoryappkt.presentation.state.MainState
+import com.example.dbm.inventoryappkt.presentation.util.ListChangedEvent
 import com.example.dbm.inventoryappkt.presentation.view.components.main.ProductsList
 import com.example.dbm.inventoryappkt.presentation.view.components.shared.ErrorIndicator
 import com.example.dbm.inventoryappkt.presentation.view.components.shared.ProgressBar
 import com.example.dbm.inventoryappkt.presentation.viewmodel.MainViewModel
-import kotlinx.coroutines.delay
 
 @Composable
 fun MainScreen(
     navigateToDetailsScreen: (Int) -> Unit,
     viewModel: MainViewModel,
     insertDummyProduct: Boolean,
-    onInsertDummyProduct: () -> Unit,
-    onLoadingMainContent: (Boolean) -> Unit
+    onDummyProductInserted: () -> Unit,
+    onLoadingContent: (Boolean) -> Unit
 ){
     val uiState by viewModel.uiState.collectAsState()
     val lazyListState = rememberLazyListState()
@@ -35,18 +35,24 @@ fun MainScreen(
     if(insertDummyProduct) {
         LaunchedEffect(key1 = Unit) {
             viewModel.insertDummyProduct()
-            delay(1200L)
-            onInsertDummyProduct()
         }
-    } else {
-        LaunchedEffect(key1 = Unit) {
-            viewModel.getProducts()
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getProducts()
+        viewModel.listChangedEvent.collect { event ->
+            when(event) {
+                is ListChangedEvent.FullListEvent -> {
+                    onDummyProductInserted()
+                    viewModel.getProducts()
+                }
+            }
         }
     }
 
     when(uiState) {
         is MainState.Success -> {
-            onLoadingMainContent(false)
+            onLoadingContent(false)
             ProductsList(
                 lazyListState = lazyListState,
                 list = uiState.value,
@@ -59,7 +65,7 @@ fun MainScreen(
             )
         }
         is MainState.Error -> {
-            onLoadingMainContent(false)
+            onLoadingContent(false)
             ErrorIndicator(
                 errorMessage = uiState.errorMessage.asString(),
                 color = MaterialTheme.colors.onPrimary,
@@ -72,7 +78,7 @@ fun MainScreen(
             )
         }
         is MainState.Loading -> {
-            onLoadingMainContent(true)
+            onLoadingContent(true)
             ProgressBar(
                 message = uiState.loadingMessage.asString(),
                 modifier = Modifier

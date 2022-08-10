@@ -21,8 +21,10 @@ import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.global.Constants
 import com.example.dbm.inventoryappkt.presentation.navigation.Screen
 import com.example.dbm.inventoryappkt.presentation.view.components.shared.TopBar
+import com.example.dbm.inventoryappkt.presentation.view.screens.AddNewProductScreen
 import com.example.dbm.inventoryappkt.presentation.view.screens.MainScreen
 import com.example.dbm.inventoryappkt.presentation.view.screens.ProductDetailsScreen
+import com.example.dbm.inventoryappkt.presentation.viewmodel.AddNewProductViewModel
 import com.example.dbm.inventoryappkt.presentation.viewmodel.MainViewModel
 import com.example.dbm.inventoryappkt.presentation.viewmodel.ProductDetailsViewModel
 
@@ -34,7 +36,7 @@ fun App(
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     var showMenu by remember { mutableStateOf(false) }
-    val titleTopBar by rememberSaveable { mutableStateOf(context.getString(R.string.app_name)) }
+    var titleTopBar by rememberSaveable { mutableStateOf(context.getString(R.string.app_name)) }
     var navigationType by rememberSaveable { mutableStateOf(Constants.NavType.NAV_MAIN) }
     var saveProductDetails by remember { mutableStateOf(false) }
     var insertDummyProduct by remember { mutableStateOf(false) }
@@ -70,7 +72,7 @@ fun App(
             if(!loadingScreenContent && navigationType == Constants.NavType.NAV_MAIN){
                 FloatingActionButton(
                     onClick = {
-                        navController.navigate(Screen.ProductScreen.withArgs(-1))
+                        navController.navigate(Screen.AddNewProductScreen.route)
                     },
                     backgroundColor = colorResource(id = R.color.regular_button_background)
                 ) {
@@ -89,25 +91,26 @@ fun App(
                     route = Screen.MainScreen.route
                 ) {
 
+                    titleTopBar = stringResource(id = R.string.app_name)
                     navigationType = Constants.NavType.NAV_MAIN
                     val mainViewModel = hiltViewModel<MainViewModel>()
 
                     MainScreen(
                         navigateToDetailsScreen = { productId ->
-                            navController.navigate(Screen.ProductScreen.withArgs(productId))
+                            navController.navigate(Screen.ProductDetailsScreen.withArgs(productId))
                         },
                         viewModel = mainViewModel,
                         insertDummyProduct = insertDummyProduct,
-                        onInsertDummyProduct = {
+                        onDummyProductInserted = {
                             insertDummyProduct = false
                         },
-                        onLoadingMainContent = { loadingContent ->
+                        onLoadingContent = { loadingContent ->
                             loadingScreenContent = loadingContent
                         }
                     )
                 }
                 composable(
-                    route = Screen.ProductScreen.route + "/{productId}",
+                    route = Screen.ProductDetailsScreen.route + "/{productId}",
                     arguments = listOf(
                         navArgument("productId") {
                             type = NavType.IntType
@@ -117,6 +120,7 @@ fun App(
                     )
                 ) { backStackEntry ->
 
+                    titleTopBar = stringResource(id = R.string.product_details_title)
                     navigationType = Constants.NavType.NAV_DETAILS
                     val productDetailsViewModel = hiltViewModel<ProductDetailsViewModel>()
 
@@ -125,8 +129,40 @@ fun App(
                         productId = backStackEntry.arguments?.getInt("productId") ?: -1,
                         viewModel = productDetailsViewModel,
                         saveProductDetails = saveProductDetails,
-                        onSavedProduct = {
+                        onProductSaved  = {
                             saveProductDetails = false
+                            navController.popBackStack()
+                        },
+                        onErrorOccurred = {
+
+                        },
+                        onLoadingContent = { loadingContent ->
+                            loadingScreenContent = loadingContent
+                        }
+                    )
+                }
+                composable(
+                    route = Screen.AddNewProductScreen.route
+                ) {
+
+                    titleTopBar = stringResource(id = R.string.add_product_content_description)
+                    navigationType = Constants.NavType.NAV_DETAILS
+                    val addNewProductViewModel = hiltViewModel<AddNewProductViewModel>()
+
+
+                    AddNewProductScreen(
+                        context = context,
+                        viewModel = addNewProductViewModel,
+                        addNewProduct = saveProductDetails,
+                        onProductSaved  = {
+                            saveProductDetails = false
+                            navController.popBackStack()
+                        },
+                        onErrorOccurred = {
+
+                        },
+                        onLoadingContent = { loadingContent ->
+                            loadingScreenContent = loadingContent
                         }
                     )
                 }
