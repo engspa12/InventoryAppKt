@@ -23,7 +23,7 @@ class MainViewModel @Inject constructor(
     @DispatchersModule.MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow<MainState>(MainState.Loading(StringWrapper.ResourceString(id = R.string.loading_products)))
+    private val _uiState = MutableStateFlow<MainState>(MainState.Loading(StringWrapper.ResourceStringWrapper(id = R.string.loading_products)))
     val uiState: StateFlow<MainState> = _uiState
 
     private val _listIsFull = Channel<Boolean>()
@@ -37,7 +37,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun showProgressBar(resourceId: Int){
-        _uiState.value = MainState.Loading(StringWrapper.ResourceString(id = resourceId))
+        _uiState.value = MainState.Loading(StringWrapper.ResourceStringWrapper(id = resourceId))
     }
 
     fun updateProductQuantity(productId: Int){

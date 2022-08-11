@@ -5,8 +5,8 @@ import com.example.dbm.inventoryappkt.util.StringWrapper
 
 sealed class ProductDetailsState(
     val value: ProductDetailsView? = null,
-    val errorMessage: StringWrapper = StringWrapper.SimpleString(""),
-    val loadingMessage: StringWrapper = StringWrapper.SimpleString("")
+    val errorMessage: StringWrapper = StringWrapper.SimpleStringWrapper(""),
+    val loadingMessage: StringWrapper = StringWrapper.SimpleStringWrapper("")
 ) {
     class Success(value: ProductDetailsView?): ProductDetailsState(value)
     class Error(errorMessage: StringWrapper): ProductDetailsState(errorMessage = errorMessage)

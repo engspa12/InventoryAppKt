@@ -25,7 +25,7 @@ class ProductDetailsViewModel @Inject constructor(
     @DispatchersModule.MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow<ProductDetailsState>(ProductDetailsState.Loading(StringWrapper.ResourceString(id = R.string.loading_product_details)))
+    private val _uiState = MutableStateFlow<ProductDetailsState>(ProductDetailsState.Loading(StringWrapper.ResourceStringWrapper(id = R.string.loading_product_details)))
     val uiState: StateFlow<ProductDetailsState> = _uiState
 
     private val _productActionEvent = Channel<ProductActionEvent>()
@@ -57,7 +57,7 @@ class ProductDetailsViewModel @Inject constructor(
     }
 
     private fun showProgressBar(resourceId: Int){
-        _uiState.value = ProductDetailsState.Loading(StringWrapper.ResourceString(id = resourceId))
+        _uiState.value = ProductDetailsState.Loading(StringWrapper.ResourceStringWrapper(id = resourceId))
     }
 
     fun increaseProductQuantity() {

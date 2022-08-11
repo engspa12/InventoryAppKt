@@ -83,7 +83,7 @@ fun ProductListItem(
         ) {
             Text(text = "Name: ${listItem.productName}")
             Text(text = "Quantity: ${listItem.productQuantity}")
-            Text(text = "Price: ${listItem.productPrice}")
+            Text(text = "Price: ${String.format("%.2f", listItem.productPrice)}")
         }
         Box(
             modifier = Modifier

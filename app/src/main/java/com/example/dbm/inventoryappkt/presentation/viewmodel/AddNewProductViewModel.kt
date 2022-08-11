@@ -63,14 +63,14 @@ class AddNewProductViewModel @Inject constructor(
 
     fun addNewProduct() {
         viewModelScope.launch(mainDispatcher) {
-            when(productsService.addProduct(uiState)) {
+            /*when(productsService.addProduct(uiState)) {
                 "Success" -> {
                     validationEventChannel.send(ValidationEvent.Success)
                 }
                 else -> {
                     validationEventChannel.send(ValidationEvent.Failure)
                 }
-            }
+            }*/
         }
     }
 

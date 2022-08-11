@@ -68,13 +68,13 @@ fun ProductDetailsContent(
                         title = stringResource(id = R.string.price),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.W600,
-                        value = item.productPrice.toString()
+                        value = String.format("%.2f", item.productPrice)
                     )
                     FieldVertical(
                         title = stringResource(id = R.string.manufacture_year),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.W600,
-                        value = item.productManufactureYear.toString()
+                        value = String.format("%d", item.productManufactureYear)
                     )
                 }
                 Spacer(
@@ -94,7 +94,7 @@ fun ProductDetailsContent(
                         title = stringResource(id = R.string.quantity),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.W600,
-                        value = item.productQuantity.toString()
+                        value = String.format("%d", item.productQuantity)
                     )
                     FieldVertical(
                         title = stringResource(id = R.string.brand),
@@ -106,7 +106,7 @@ fun ProductDetailsContent(
                         title = stringResource(id = R.string.weight),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.W600,
-                        value = item.productWeight.toString()
+                        value = String.format("%.2f", item.productWeight)
                     )
                 }
             }
@@ -146,7 +146,7 @@ fun ProductDetailsContent(
                 title = stringResource(id = R.string.warranty),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W600,
-                value = item.productWarranty.toString(),
+                value = String.format("%d", item.productWarranty),
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)

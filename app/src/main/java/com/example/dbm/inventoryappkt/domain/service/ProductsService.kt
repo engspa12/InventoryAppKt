@@ -5,10 +5,21 @@ import com.example.dbm.inventoryappkt.domain.usecase.*
 import com.example.dbm.inventoryappkt.domain.util.ProductModification
 import com.example.dbm.inventoryappkt.domain.util.toDetailsView
 import com.example.dbm.inventoryappkt.domain.util.toListView
+import com.example.dbm.inventoryappkt.global.Constants
 import com.example.dbm.inventoryappkt.presentation.model.ProductDetailsView
 import com.example.dbm.inventoryappkt.presentation.model.ProductListView
-import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
 import javax.inject.Inject
+
+interface IProductsService {
+    suspend fun getProducts(): List<ProductListView>
+    suspend fun getProductDetails(productId: Int): ProductDetailsView
+    suspend fun insertDummyProduct()
+    suspend fun addProduct(product: ProductDomain): String
+    suspend fun saveModifiedProduct(productId: Int)
+    suspend fun reduceProductQuantity(productId: Int)
+    fun modifyProductForView(action: ProductModification): ProductDetailsView
+    suspend fun deleteProduct(productId: Int)
+}
 
 class ProductsService @Inject constructor(
     private val getProductsUseCase: IGetProductsUseCase,
@@ -38,7 +49,7 @@ class ProductsService @Inject constructor(
             warranty = 180,
             manufactureYear = 2022,
             weight = 0.15,
-            price = 25.00,
+            price = 24.00,
             quantity = 10,
             inStock = true,
             name = "Men's Shirt",
@@ -50,30 +61,16 @@ class ProductsService @Inject constructor(
         addProductUseCase(product = productDomain)
     }
 
-    override suspend fun addProduct(product: ProductInputState) : String {
-        val productDomain = ProductDomain(
-            brand = "DBM",
-            warranty = 180,
-            manufactureYear = 2022,
-            weight = 0.15,
-            price = 25.00,
-            quantity = 10,
-            inStock = true,
-            name = "Men's Shirt",
-            type = "Clothing",
-            imageUrl = "",
-            imageUrlStorageLocation = "",
-            isDummyProduct = true
-        )
-        //addProductUseCase()
+    override suspend fun addProduct(product: ProductDomain) : String {
+        addProductUseCase(product)
         return "Success"
     }
 
     override suspend fun reduceProductQuantity(productId: Int) {
         val product = getProductByIdUseCase(productId)
-        val newQuantity = product.quantity - 1
-        if(newQuantity > 0){
-            val newProduct = product.copy(quantity = product.quantity - 1)
+        if(product.quantity > Constants.MIN_QUANTITY_ALLOWED){
+            val newQuantity = product.quantity - 1
+            val newProduct = product.copy(quantity = newQuantity)
             updateProductUseCase(newProduct)
         }
     }
@@ -88,7 +85,7 @@ class ProductsService @Inject constructor(
 
         return when(action) {
             ProductModification.INCREASE_QUANTITY -> {
-                if(tempProductDetailsView.productQuantity < 10){
+                if(tempProductDetailsView.productQuantity < Constants.MAX_QUANTITY_ALLOWED){
                     val newQuantity = tempProductDetailsView.productQuantity + 1
                     val newProduct = tempProductDetailsView.copy(productQuantity = newQuantity)
                     tempProductDetailsView = newProduct
@@ -98,7 +95,7 @@ class ProductsService @Inject constructor(
                 }
             }
             ProductModification.DECREASE_QUANTITY -> {
-                if(tempProductDetailsView.productQuantity > 1){
+                if(tempProductDetailsView.productQuantity > Constants.MIN_QUANTITY_ALLOWED){
                     val newQuantity = tempProductDetailsView.productQuantity - 1
                     val newProduct = tempProductDetailsView.copy(productQuantity = newQuantity)
                     tempProductDetailsView = newProduct
