@@ -45,6 +45,7 @@ class ProductsRepository @Inject constructor(
     override suspend fun updateProduct(productDomain: ProductDomain) {
         withContext(dispatcher) {
             val productCache = cacheMapper.mapFromDomainModel(productDomain)
+            productCache.id = productDomain.id
             localDataSource.updateProduct(productCache)
         }
     }

@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dbm.inventoryappkt.presentation.state.MainState
-import com.example.dbm.inventoryappkt.presentation.util.ListChangedEvent
 import com.example.dbm.inventoryappkt.presentation.view.components.main.ProductsList
 import com.example.dbm.inventoryappkt.presentation.view.components.shared.ErrorIndicator
 import com.example.dbm.inventoryappkt.presentation.view.components.shared.ProgressBar
@@ -40,12 +39,10 @@ fun MainScreen(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.getProducts()
-        viewModel.listChangedEvent.collect { event ->
-            when(event) {
-                is ListChangedEvent.FullListEvent -> {
-                    onDummyProductInserted()
-                    viewModel.getProducts()
-                }
+
+        viewModel.listIsFulls.collect { listIsFull ->
+            if(listIsFull){
+                onDummyProductInserted()
             }
         }
     }

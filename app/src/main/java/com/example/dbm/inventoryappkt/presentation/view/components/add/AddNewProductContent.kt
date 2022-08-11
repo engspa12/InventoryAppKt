@@ -17,16 +17,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dbm.inventoryappkt.R
-import com.example.dbm.inventoryappkt.presentation.util.ProductChangeEvent
 import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
-import com.example.dbm.inventoryappkt.presentation.view.components.shared.InputFieldHorizontal
-import com.example.dbm.inventoryappkt.presentation.view.components.shared.InputFieldVertical
-import com.example.dbm.inventoryappkt.presentation.view.components.shared.SpinnerHorizontal
+import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
 
 @Composable
 fun AddNewProductContent(
     inputState: ProductInputState,
-    onChangeEvent: (ProductChangeEvent) -> Unit,
+    onChangeEvent: (ProductDetailsChangeEvent) -> Unit,
     onSelectImageButtonClicked: () -> Unit,
     listStockOptions: List<String>,
     listCategoryOptions: List<String>
@@ -69,7 +66,7 @@ fun AddNewProductContent(
                         fontWeight = FontWeight.W600,
                         inputValue = inputState.productName,
                         onInputValueChanged = {
-                            onChangeEvent(ProductChangeEvent.NameChanged(it))
+                            onChangeEvent(ProductDetailsChangeEvent.NameChanged(it))
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             capitalization = KeyboardCapitalization.Words,
@@ -83,7 +80,7 @@ fun AddNewProductContent(
                         fontWeight = FontWeight.W600,
                         inputValue = inputState.productPrice,
                         onInputValueChanged = {
-                            onChangeEvent(ProductChangeEvent.PriceChanged(it))
+                            onChangeEvent(ProductDetailsChangeEvent.PriceChanged(it))
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Number
@@ -96,7 +93,7 @@ fun AddNewProductContent(
                         fontWeight = FontWeight.W600,
                         inputValue = inputState.productManufactureYear,
                         onInputValueChanged = {
-                            onChangeEvent(ProductChangeEvent.ManufactureYearChanged(it))
+                            onChangeEvent(ProductDetailsChangeEvent.ManufactureYearChanged(it))
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Number
@@ -123,7 +120,7 @@ fun AddNewProductContent(
                         fontWeight = FontWeight.W600,
                         inputValue = inputState.productQuantity,
                         onInputValueChanged = {
-                            onChangeEvent(ProductChangeEvent.QuantityChanged(it))
+                            onChangeEvent(ProductDetailsChangeEvent.QuantityChanged(it))
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             capitalization = KeyboardCapitalization.Words,
@@ -137,7 +134,7 @@ fun AddNewProductContent(
                         fontWeight = FontWeight.W600,
                         inputValue = inputState.productBrand,
                         onInputValueChanged = {
-                            onChangeEvent(ProductChangeEvent.BrandChanged(it))
+                            onChangeEvent(ProductDetailsChangeEvent.BrandChanged(it))
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             capitalization = KeyboardCapitalization.Words,
@@ -151,7 +148,7 @@ fun AddNewProductContent(
                         fontWeight = FontWeight.W600,
                         inputValue = inputState.productWeight,
                         onInputValueChanged = {
-                            onChangeEvent(ProductChangeEvent.WeightChanged(it))
+                            onChangeEvent(ProductDetailsChangeEvent.WeightChanged(it))
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             capitalization = KeyboardCapitalization.Words,
@@ -169,7 +166,7 @@ fun AddNewProductContent(
                 fontWeight = FontWeight.W600,
                 itemSelected = inputState.productType,
                 onItemSelected = {
-                    onChangeEvent(ProductChangeEvent.TypeChanged(it))
+                    onChangeEvent(ProductDetailsChangeEvent.TypeChanged(it))
                 },
                 modifier = Modifier
                     .padding(top = 10.dp)
@@ -186,7 +183,7 @@ fun AddNewProductContent(
                 fontWeight = FontWeight.W600,
                 itemSelected = inputState.productStockStatus,
                 onItemSelected = {
-                    onChangeEvent(ProductChangeEvent.StockStatusChanged(it))
+                    onChangeEvent(ProductDetailsChangeEvent.StockStatusChanged(it))
                 },
                 modifier = Modifier
                     .padding(top = 10.dp)
@@ -203,7 +200,7 @@ fun AddNewProductContent(
                 fontWeight = FontWeight.W600,
                 inputValue = inputState.productWarranty,
                 onInputValueChanged = {
-                    onChangeEvent(ProductChangeEvent.WarrantyChanged(it))
+                    onChangeEvent(ProductDetailsChangeEvent.WarrantyChanged(it))
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number

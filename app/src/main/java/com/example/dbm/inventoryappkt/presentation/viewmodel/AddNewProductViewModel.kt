@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
-import com.example.dbm.inventoryappkt.presentation.util.ProductChangeEvent
+import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
 import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
 import com.example.dbm.inventoryappkt.presentation.util.ValidationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,33 +29,33 @@ class AddNewProductViewModel @Inject constructor(
     private val validationEventChannel = Channel<ValidationEvent>()
     val validationEvent = validationEventChannel.receiveAsFlow()
 
-    fun onEvent(event: ProductChangeEvent) {
+    fun onEvent(event: ProductDetailsChangeEvent) {
         when(event) {
-            is ProductChangeEvent.NameChanged -> {
+            is ProductDetailsChangeEvent.NameChanged -> {
                 uiState = uiState.copy(productName = event.name)
             }
-            is ProductChangeEvent.BrandChanged -> {
+            is ProductDetailsChangeEvent.BrandChanged -> {
                 uiState = uiState.copy(productBrand = event.brand)
             }
-            is ProductChangeEvent.ManufactureYearChanged -> {
+            is ProductDetailsChangeEvent.ManufactureYearChanged -> {
                 uiState = uiState.copy(productManufactureYear = event.manufactureYear)
             }
-            is ProductChangeEvent.PriceChanged -> {
+            is ProductDetailsChangeEvent.PriceChanged -> {
                 uiState = uiState.copy(productPrice = event.price)
             }
-            is ProductChangeEvent.QuantityChanged -> {
+            is ProductDetailsChangeEvent.QuantityChanged -> {
                 uiState = uiState.copy(productQuantity = event.quantity)
             }
-            is ProductChangeEvent.StockStatusChanged -> {
+            is ProductDetailsChangeEvent.StockStatusChanged -> {
                 uiState = uiState.copy(productStockStatus = event.stockStatus)
             }
-            is ProductChangeEvent.TypeChanged -> {
+            is ProductDetailsChangeEvent.TypeChanged -> {
                 uiState = uiState.copy(productType = event.type)
             }
-            is ProductChangeEvent.WarrantyChanged -> {
+            is ProductDetailsChangeEvent.WarrantyChanged -> {
                 uiState = uiState.copy(productWarranty = event.warranty)
             }
-            is ProductChangeEvent.WeightChanged -> {
+            is ProductDetailsChangeEvent.WeightChanged -> {
                 uiState = uiState.copy(productWeight = event.weight)
             }
         }

@@ -28,7 +28,7 @@ fun QuantityEditor(
     ) {
         Button(
             onClick = {
-                onIncreaseQuantity()
+                onDecreaseQuantity()
                       },
             modifier = Modifier
                 .padding(start = 10.dp, end = 5.dp)
@@ -41,13 +41,13 @@ fun QuantityEditor(
             )
         ) {
             Text(
-                text = stringResource(id = R.string.quantity_plus),
+                text = stringResource(id = R.string.quantity_minus),
                 letterSpacing = 4.sp
             )
         }
         Button(
             onClick = {
-                onDecreaseQuantity()
+                onIncreaseQuantity()
                       },
             modifier = Modifier
                 .padding(start = 5.dp, end = 5.dp)
@@ -60,7 +60,7 @@ fun QuantityEditor(
             )
         ) {
             Text(
-                text = stringResource(id = R.string.quantity_minus),
+                text = stringResource(id = R.string.quantity_plus),
                 letterSpacing = 4.sp
             )
         }

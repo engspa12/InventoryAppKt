@@ -1,17 +1,11 @@
 package com.example.dbm.inventoryappkt.presentation.viewmodel
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
-import com.example.dbm.inventoryappkt.domain.usecase.IGetProductsUseCase
 import com.example.dbm.inventoryappkt.presentation.state.MainState
-import com.example.dbm.inventoryappkt.presentation.util.ListChangedEvent
-import com.example.dbm.inventoryappkt.presentation.util.ValidationEvent
 import com.example.dbm.inventoryappkt.util.StringWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -32,15 +26,11 @@ class MainViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<MainState>(MainState.Loading(StringWrapper.ResourceString(id = R.string.loading_products)))
     val uiState: StateFlow<MainState> = _uiState
 
-    private val listChangedEventChannel = Channel<ListChangedEvent>()
-    val listChangedEvent = listChangedEventChannel.receiveAsFlow()
+    private val _listIsFull = Channel<Boolean>()
+    val listIsFulls = _listIsFull.receiveAsFlow()
 
     fun getProducts() {
-
-        showProgressBar(R.string.loading_products)
-
         viewModelScope.launch(mainDispatcher) {
-            delay(200L)
             val products = productsService.getProducts()
             _uiState.value = MainState.Success(products)
         }
@@ -53,7 +43,7 @@ class MainViewModel @Inject constructor(
     fun updateProductQuantity(productId: Int){
 
         viewModelScope.launch(mainDispatcher) {
-            productsService.updateProduct(productId)
+            productsService.reduceProductQuantity(productId)
             getProducts()
         }
     }
@@ -64,8 +54,9 @@ class MainViewModel @Inject constructor(
 
         viewModelScope.launch(mainDispatcher) {
             productsService.insertDummyProduct()
-            delay(500L)
-            listChangedEventChannel.send(ListChangedEvent.FullListEvent)
+            delay(600L)
+            _listIsFull.send(true)
+            getProducts()
         }
     }
 }

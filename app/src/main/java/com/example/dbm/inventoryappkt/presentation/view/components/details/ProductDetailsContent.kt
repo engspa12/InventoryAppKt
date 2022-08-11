@@ -16,8 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.presentation.model.ProductDetailsView
-import com.example.dbm.inventoryappkt.presentation.view.components.shared.FieldHorizontal
-import com.example.dbm.inventoryappkt.presentation.view.components.shared.FieldVertical
 
 @Composable
 fun ProductDetailsContent(

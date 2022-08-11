@@ -1,18 +1,22 @@
-package com.example.dbm.inventoryappkt.presentation.view.components.shared
+package com.example.dbm.inventoryappkt.presentation.view.components.add
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusEventModifier
+import androidx.compose.ui.focus.FocusRequesterModifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
@@ -26,7 +30,7 @@ import com.example.dbm.inventoryappkt.R
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun InputFieldHorizontal(
+fun InputFieldVertical(
     text: String,
     placeholder: String,
     fontSize: TextUnit,
@@ -36,23 +40,20 @@ fun InputFieldHorizontal(
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier
 ){
-    Row(
+    Column(
         modifier = modifier
-            .padding(start =  10.dp, end = 10.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+            .wrapContentHeight(),
     ) {
         Text(
-            text = text,
+            modifier = Modifier.padding(bottom = 8.dp),
             fontSize = fontSize,
             fontWeight = fontWeight,
-            modifier = Modifier
-                .padding(end = 10.dp)
+            text = text
         )
         BasicTextField(
             modifier = Modifier
                 .wrapContentHeight()
-                .weight(1f)
                 .onFocusChanged {
                     if(it.isFocused){
                         println("I HAVE focus with $text")

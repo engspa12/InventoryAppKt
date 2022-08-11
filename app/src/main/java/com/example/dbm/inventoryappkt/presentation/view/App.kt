@@ -133,8 +133,9 @@ fun App(
                             saveProductDetails = false
                             navController.popBackStack()
                         },
-                        onErrorOccurred = {
-
+                        onProductDeleted = {
+                            saveProductDetails = false
+                            navController.popBackStack()
                         },
                         onLoadingContent = { loadingContent ->
                             loadingScreenContent = loadingContent
@@ -149,7 +150,6 @@ fun App(
                     navigationType = Constants.NavType.NAV_DETAILS
                     val addNewProductViewModel = hiltViewModel<AddNewProductViewModel>()
 
-
                     AddNewProductScreen(
                         context = context,
                         viewModel = addNewProductViewModel,
@@ -159,7 +159,7 @@ fun App(
                             navController.popBackStack()
                         },
                         onErrorOccurred = {
-
+                            //TODO: AN ERROR OCCURRED WHILE ADDING NEW PRODUCT
                         },
                         onLoadingContent = { loadingContent ->
                             loadingScreenContent = loadingContent

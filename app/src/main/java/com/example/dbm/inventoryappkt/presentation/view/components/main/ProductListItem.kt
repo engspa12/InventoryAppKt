@@ -32,7 +32,10 @@ fun ProductListItem(
     Row(
         modifier = modifier
             .padding(2.dp)
-            .background(color = colorResource(id = R.color.item_list_background)),
+            .background(color = colorResource(id = R.color.item_list_background))
+            .clickable {
+                onItemClicked()
+            },
         verticalAlignment = Alignment.CenterVertically
     ){
         if(listItem.isDummyProduct) {
@@ -60,11 +63,7 @@ fun ProductListItem(
                     tilt = 20f
                 ),
                 contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = modifier
-                    .clickable {
-                        onItemClicked()
-                    }
+                contentScale = ContentScale.FillBounds
             )
         }
         Spacer(
@@ -73,18 +72,12 @@ fun ProductListItem(
                 .fillMaxHeight()
                 .requiredWidth(2.dp)
                 .background(color = MaterialTheme.colors.onPrimary)
-                .clickable {
-                    onItemClicked()
-                }
         )
         Column(
             modifier = Modifier
                 .fillMaxHeight()
                 .padding(horizontal = 10.dp)
-                .weight(1f)
-                .clickable {
-                    onItemClicked()
-                },
+                .weight(1f),
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.Start
         ) {
@@ -94,13 +87,13 @@ fun ProductListItem(
         }
         Box(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(0.dp)
                 .fillMaxHeight()
                 .background(color = colorResource(id = R.color.new_sale_button_background))
-                .padding(horizontal = 10.dp)
                 .clickable {
                     onNewSaleClicked()
-                },
+                }
+                .padding(horizontal = 10.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(text = "New Sale")
