@@ -1,8 +1,8 @@
 package com.example.dbm.inventoryappkt.di
 
 import android.content.Context
-import com.example.dbm.inventoryappkt.util.IValidator
-import com.example.dbm.inventoryappkt.util.Validator
+import com.example.dbm.inventoryappkt.util.IConnectionChecker
+import com.example.dbm.inventoryappkt.util.ConnectionChecker
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,10 +11,10 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ValidatorModule {
+object CheckerModule {
 
     @Provides
-    fun provideValidator(@ApplicationContext appContext: Context): IValidator {
-        return Validator(appContext)
+    fun provideConnectionChecker(@ApplicationContext appContext: Context): IConnectionChecker {
+        return ConnectionChecker(appContext)
     }
 }

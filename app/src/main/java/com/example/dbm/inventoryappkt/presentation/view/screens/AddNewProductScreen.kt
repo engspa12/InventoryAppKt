@@ -7,7 +7,7 @@ import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.presentation.util.ValidationEvent
 import com.example.dbm.inventoryappkt.presentation.view.components.add.AddNewProductContent
 import com.example.dbm.inventoryappkt.presentation.viewmodel.AddNewProductViewModel
-import kotlinx.coroutines.delay
+import com.example.dbm.inventoryappkt.util.StringWrapper
 
 @Composable
 fun AddNewProductScreen(
@@ -15,9 +15,11 @@ fun AddNewProductScreen(
     viewModel: AddNewProductViewModel,
     addNewProduct: Boolean,
     onProductSaved: () -> Unit,
-    onErrorOccurred: () -> Unit,
+    onErrorOccurred: (String?) -> Unit,
     onLoadingContent: (Boolean) -> Unit
 ) {
+
+    val inputState = viewModel.uiState
 
     if(addNewProduct){
         LaunchedEffect(key1 = Unit) {
@@ -25,7 +27,7 @@ fun AddNewProductScreen(
             viewModel.addNewProduct()
         }
     }
-    
+
     LaunchedEffect(key1 = Unit){
         viewModel.validationEvent.collect { event ->
             onLoadingContent(false)
@@ -34,33 +36,20 @@ fun AddNewProductScreen(
                     onProductSaved()
                 }
                 is ValidationEvent.Failure -> {
-                    onErrorOccurred()
+                    val errorMessage = context.getString(event.errorMessage?.getStringIdResource() ?: 0)
+                    onErrorOccurred(errorMessage)
                 }
             }
         }
     }
 
-    val listCategoryOptions = listOf(
-        stringResource(id = R.string.sports_category),
-        stringResource(id = R.string.technology_category),
-        stringResource(id = R.string.furniture_category),
-        stringResource(id = R.string.clothing_category),
-        stringResource(id = R.string.other_category)
-    )
-    val listStockOptions = listOf(
-        stringResource(id = R.string.in_stock_status),
-        stringResource(id = R.string.without_stock_status)
-    )
-
     AddNewProductContent(
-        inputState = viewModel.uiState,
+        inputState = inputState,
         onChangeEvent = { event ->
             viewModel.onEvent(event)
         },
         onSelectImageButtonClicked = {
             //TODO: SELECT IMAGE GALLERY
-        },
-        listStockOptions = listStockOptions,
-        listCategoryOptions = listCategoryOptions
+        }
     )
 }

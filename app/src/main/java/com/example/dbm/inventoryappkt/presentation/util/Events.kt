@@ -1,8 +1,10 @@
 package com.example.dbm.inventoryappkt.presentation.util
 
+import com.example.dbm.inventoryappkt.util.StringWrapper
+
 sealed class ValidationEvent {
     object Success: ValidationEvent()
-    object Failure: ValidationEvent()
+    data class Failure(val errorMessage: StringWrapper? = null) : ValidationEvent()
 }
 
 sealed class ProductDetailsChangeEvent {
@@ -12,8 +14,8 @@ sealed class ProductDetailsChangeEvent {
     data class BrandChanged(val brand: String): ProductDetailsChangeEvent()
     data class QuantityChanged(val quantity: String): ProductDetailsChangeEvent()
     data class WeightChanged(val weight: String): ProductDetailsChangeEvent()
-    data class TypeChanged(val type: String): ProductDetailsChangeEvent()
-    data class StockStatusChanged(val stockStatus: String): ProductDetailsChangeEvent()
+    data class TypeChanged(val type: Map.Entry<String, StringWrapper>): ProductDetailsChangeEvent()
+    data class StockStatusChanged(val stockStatus: Map.Entry<String, StringWrapper>): ProductDetailsChangeEvent()
     data class WarrantyChanged(val warranty: String): ProductDetailsChangeEvent()
 }
 

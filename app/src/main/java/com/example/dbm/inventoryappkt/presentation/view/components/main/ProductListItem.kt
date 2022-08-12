@@ -49,6 +49,10 @@ fun ProductListItem(
             )
         } else {
             GlideImage(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .requiredSize(70.dp),
+                alignment = Alignment.Center,
                 imageModel = listItem.productUrlImage,
                 requestOptions = {
                     RequestOptions()

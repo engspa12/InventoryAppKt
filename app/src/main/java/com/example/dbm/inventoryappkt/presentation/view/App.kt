@@ -7,7 +7,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,7 +29,10 @@ import com.example.dbm.inventoryappkt.presentation.view.screens.ProductDetailsSc
 import com.example.dbm.inventoryappkt.presentation.viewmodel.AddNewProductViewModel
 import com.example.dbm.inventoryappkt.presentation.viewmodel.MainViewModel
 import com.example.dbm.inventoryappkt.presentation.viewmodel.ProductDetailsViewModel
+import com.example.dbm.inventoryappkt.util.StringWrapper
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun App(
     context: Context
@@ -35,6 +40,8 @@ fun App(
 
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
     var showMenu by remember { mutableStateOf(false) }
     var titleTopBar by rememberSaveable { mutableStateOf(context.getString(R.string.app_name)) }
     var navigationType by rememberSaveable { mutableStateOf(Constants.NavType.NAV_MAIN) }
@@ -44,6 +51,15 @@ fun App(
 
     Scaffold(
         scaffoldState = scaffoldState,
+        snackbarHost = {
+            SnackbarHost(hostState = it) { data ->
+                Snackbar(
+                    backgroundColor = MaterialTheme.colors.background,
+                    contentColor = MaterialTheme.colors.onBackground,
+                    snackbarData = data
+                )
+            }
+        },
         topBar = {
             TopBar(
                 showMenu = showMenu,
@@ -155,11 +171,20 @@ fun App(
                         viewModel = addNewProductViewModel,
                         addNewProduct = saveProductDetails,
                         onProductSaved  = {
+                            keyboardController?.hide()
                             saveProductDetails = false
                             navController.popBackStack()
                         },
-                        onErrorOccurred = {
-                            //TODO: AN ERROR OCCURRED WHILE ADDING NEW PRODUCT
+                        onErrorOccurred = { errorMessage ->
+                            keyboardController?.hide()
+                            saveProductDetails = false
+                            if(errorMessage != null){
+                                coroutineScope.launch {
+                                    scaffoldState.snackbarHostState.showSnackbar(
+                                        errorMessage
+                                    )
+                                }
+                            }
                         },
                         onLoadingContent = { loadingContent ->
                             loadingScreenContent = loadingContent

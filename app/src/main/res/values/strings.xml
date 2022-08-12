@@ -49,4 +49,16 @@
     <string name="without_stock_status">Without Stock</string>
     <string name="subject_email">Supply Order</string>
     <string name="message_email">Dear Provider,\n\nWe need %1$d more items from the product with the following details:\n\nName: %2$s\nBrand: %3$s\nPrice: %4$.2f %5$s\n\nThank you for your attention. I\'m looking forward to hearing from you.\n\nRegards"</string>
+    <string name="name_empty_error_message">Name cannot be empty</string>
+    <string name="name_not_enough_characters_error_message">Name cannot be less than 3 characters long</string>
+    <string name="price_format_error_message">Price value is not valid</string>
+    <string name="manufacture_year_format_error_message">Manufacture year value is not valid</string>
+    <string name="quantity_format_error_message">Quantity value is not valid</string>
+    <string name="brand_empty_error_message">Brand cannot be empty</string>
+    <string name="brand_not_enough_characters_error_message">Brand cannot be less than 3 characters long</string>
+    <string name="weight_format_error_message">Weight value is not valid</string>
+    <string name="type_empty_error_message">Type cannot be empty</string>
+    <string name="stock_status_empty_error_message">Stock status cannot be empty</string>
+    <string name="warranty_format_error_message">Warranty value is not valid</string>
+    <string name="no_data_available_message">No data available</string>
 </resources>

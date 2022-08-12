@@ -1,6 +1,5 @@
 package com.example.dbm.inventoryappkt.presentation.view.components.add
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.DropdownMenu
@@ -9,27 +8,22 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.example.dbm.inventoryappkt.R
-import com.example.dbm.inventoryappkt.global.Constants
+import com.example.dbm.inventoryappkt.util.StringWrapper
 
 @Composable
 fun SpinnerHorizontal(
     text: String,
-    options: List<String>,
+    options: Map<String, StringWrapper>,
     fontSize: TextUnit,
     fontWeight: FontWeight,
-    itemSelected: String,
-    onItemSelected: (String) -> Unit,
+    itemSelected: StringWrapper,
+    onItemSelected: (Map.Entry<String, StringWrapper>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -64,7 +58,7 @@ fun SpinnerHorizontal(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = itemSelected,
+                    text = itemSelected.asString(),
                     fontSize = fontSize,
                     fontWeight = fontWeight
                 )
@@ -83,7 +77,7 @@ fun SpinnerHorizontal(
                             isExpanded = false
                         }
                     ) {
-                        Text(text = item)
+                        Text(text = item.value.asString())
                     }
                 }
             }

@@ -24,9 +24,7 @@ import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEven
 fun AddNewProductContent(
     inputState: ProductInputState,
     onChangeEvent: (ProductDetailsChangeEvent) -> Unit,
-    onSelectImageButtonClicked: () -> Unit,
-    listStockOptions: List<String>,
-    listCategoryOptions: List<String>
+    onSelectImageButtonClicked: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -161,10 +159,10 @@ fun AddNewProductContent(
         item {
             SpinnerHorizontal(
                 text = stringResource(id = R.string.product_type),
-                options = listCategoryOptions,
+                options = inputState.categoryOptions,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W600,
-                itemSelected = inputState.productType,
+                itemSelected = inputState.productTypeText,
                 onItemSelected = {
                     onChangeEvent(ProductDetailsChangeEvent.TypeChanged(it))
                 },
@@ -178,10 +176,10 @@ fun AddNewProductContent(
         item {
             SpinnerHorizontal(
                 text = stringResource(id = R.string.stock_status),
-                options = listStockOptions,
+                options = inputState.stockStatusOptions,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W600,
-                itemSelected = inputState.productStockStatus,
+                itemSelected = inputState.productStockStatusText,
                 onItemSelected = {
                     onChangeEvent(ProductDetailsChangeEvent.StockStatusChanged(it))
                 },

@@ -116,7 +116,7 @@ fun ProductDetailsContent(
                 title = stringResource(id = R.string.product_type),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W600,
-                value = item.productType,
+                value = item.productType.asString(),
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)
@@ -129,11 +129,7 @@ fun ProductDetailsContent(
                 title = stringResource(id = R.string.stock_status),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W600,
-                value =
-                if (item.productInStock)
-                    stringResource(id = R.string.in_stock_status)
-                else
-                    stringResource(id = R.string.without_stock_status),
+                value = item.productInStock.asString(),
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)

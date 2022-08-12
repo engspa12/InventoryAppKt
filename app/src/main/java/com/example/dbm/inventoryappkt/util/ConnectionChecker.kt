@@ -6,13 +6,13 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import javax.inject.Inject
 
-interface IValidator {
+interface IConnectionChecker {
     fun isOnline(): Boolean
 }
 
-class Validator @Inject constructor(
+class ConnectionChecker @Inject constructor(
     private val context: Context
-): IValidator {
+): IConnectionChecker {
 
     override fun isOnline(): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
