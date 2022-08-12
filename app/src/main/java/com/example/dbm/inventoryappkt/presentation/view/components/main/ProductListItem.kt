@@ -85,9 +85,9 @@ fun ProductListItem(
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.Start
         ) {
-            Text(text = "Name: ${listItem.productName}")
-            Text(text = "Quantity: ${listItem.productQuantity}")
-            Text(text = "Price: ${String.format("%.2f", listItem.productPrice)}")
+            Text(text = stringResource(id = R.string.name_list_item, listItem.productName))
+            Text(text = stringResource(id = R.string.quantity_list_item, listItem.productQuantity))
+            Text(text = stringResource(id = R.string.price_list_item,  listItem.productPrice))
         }
         Box(
             modifier = Modifier
@@ -100,7 +100,7 @@ fun ProductListItem(
                 .padding(horizontal = 10.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "New Sale")
+            Text(text = stringResource(id = R.string.new_sale_button_text))
         }
     }
 }

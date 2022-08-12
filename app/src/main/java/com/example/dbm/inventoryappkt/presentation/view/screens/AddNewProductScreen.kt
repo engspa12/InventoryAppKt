@@ -36,7 +36,8 @@ fun AddNewProductScreen(
                     onProductSaved()
                 }
                 is ValidationEvent.Failure -> {
-                    val errorMessage = context.getString(event.errorMessage?.getStringIdResource() ?: 0)
+                    val args = event.errorMessage?.getStringArgs()
+                    val errorMessage = context.getString(event.errorMessage?.getStringIdResource() ?: 0, if(args != null && args.isNotEmpty()) args[0] else "")
                     onErrorOccurred(errorMessage)
                 }
             }
