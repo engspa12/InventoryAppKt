@@ -2,10 +2,7 @@ package com.example.dbm.inventoryappkt.presentation.view.components.add
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
@@ -36,6 +33,7 @@ fun SpinnerHorizontal(
         Text(
             text = text,
             fontSize = fontSize,
+            color = MaterialTheme.colors.onPrimary,
             fontWeight = fontWeight,
             modifier = Modifier
                 .padding(end = 10.dp)
@@ -59,6 +57,7 @@ fun SpinnerHorizontal(
             ) {
                 Text(
                     text = itemSelected.asString(),
+                    color = MaterialTheme.colors.onPrimary,
                     fontSize = fontSize,
                     fontWeight = fontWeight
                 )
@@ -77,7 +76,9 @@ fun SpinnerHorizontal(
                             isExpanded = false
                         }
                     ) {
-                        Text(text = item.value.asString())
+                        Text(
+                            text = item.value.asString()
+                        )
                     }
                 }
             }

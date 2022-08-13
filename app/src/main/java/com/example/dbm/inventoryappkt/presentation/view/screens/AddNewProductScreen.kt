@@ -1,9 +1,22 @@
 package com.example.dbm.inventoryappkt.presentation.view.screens
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.dbm.inventoryappkt.R
+import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
 import com.example.dbm.inventoryappkt.presentation.util.ValidationEvent
 import com.example.dbm.inventoryappkt.presentation.view.components.add.AddNewProductContent
 import com.example.dbm.inventoryappkt.presentation.viewmodel.AddNewProductViewModel
@@ -20,6 +33,25 @@ fun AddNewProductScreen(
 ) {
 
     val inputState = viewModel.uiState
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        imageUri = uri
+        viewModel.onEvent(ProductDetailsChangeEvent.ImageSelectedChanged(imageUri.toString()))
+    }
+
+    LaunchedEffect(key1 = imageUri){
+        imageUri?.let {
+            bitmap = if (Build.VERSION.SDK_INT < 28) {
+                MediaStore.Images
+                    .Media.getBitmap(context.contentResolver,it)
+            } else {
+                val source = ImageDecoder
+                    .createSource(context.contentResolver,it)
+                ImageDecoder.decodeBitmap(source)
+            }
+        }
+    }
 
     if(addNewProduct){
         LaunchedEffect(key1 = Unit) {
@@ -45,12 +77,13 @@ fun AddNewProductScreen(
     }
 
     AddNewProductContent(
+        bitmap = bitmap,
         inputState = inputState,
         onChangeEvent = { event ->
             viewModel.onEvent(event)
         },
         onSelectImageButtonClicked = {
-            //TODO: SELECT IMAGE GALLERY
+            launcher.launch("image/*")
         }
     )
 }

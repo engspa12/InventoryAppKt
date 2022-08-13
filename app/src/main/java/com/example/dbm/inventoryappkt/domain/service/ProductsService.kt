@@ -53,9 +53,9 @@ class ProductsService @Inject constructor(
             quantity = 10,
             inStock = true,
             name = "Men's Shirt",
-            type = "Clothing",
+            type = "clothing",
             imageUrl = "",
-            imageUrlStorageLocation = "",
+            imageUriStorage = "",
             isDummyProduct = true
         )
         addProductUseCase(product = productDomain)

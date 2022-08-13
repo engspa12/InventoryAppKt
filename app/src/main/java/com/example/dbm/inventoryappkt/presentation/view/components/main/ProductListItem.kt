@@ -85,9 +85,18 @@ fun ProductListItem(
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.Start
         ) {
-            Text(text = stringResource(id = R.string.name_list_item, listItem.productName))
-            Text(text = stringResource(id = R.string.quantity_list_item, listItem.productQuantity))
-            Text(text = stringResource(id = R.string.price_list_item,  listItem.productPrice))
+            Text(
+                text = stringResource(id = R.string.name_list_item, listItem.productName),
+                color = MaterialTheme.colors.onPrimary,
+            )
+            Text(
+                text = stringResource(id = R.string.quantity_list_item, listItem.productQuantity),
+                color = MaterialTheme.colors.onPrimary,
+            )
+            Text(
+                text = stringResource(id = R.string.price_list_item,  listItem.productPrice),
+                color = MaterialTheme.colors.onPrimary,
+            )
         }
         Box(
             modifier = Modifier
@@ -100,7 +109,10 @@ fun ProductListItem(
                 .padding(horizontal = 10.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = stringResource(id = R.string.new_sale_button_text))
+            Text(
+                text = stringResource(id = R.string.new_sale_button_text),
+                color = MaterialTheme.colors.onPrimary,
+            )
         }
     }
 }

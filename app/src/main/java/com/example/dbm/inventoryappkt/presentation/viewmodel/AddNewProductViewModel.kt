@@ -61,6 +61,9 @@ class AddNewProductViewModel @Inject constructor(
             is ProductDetailsChangeEvent.WeightChanged -> {
                 uiState = uiState.copy(productWeight = event.weight)
             }
+            is ProductDetailsChangeEvent.ImageSelectedChanged -> {
+                uiState = uiState.copy(productImageUri = event.uri)
+            }
         }
     }
 

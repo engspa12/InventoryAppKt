@@ -9,44 +9,31 @@ import java.util.*
 import javax.inject.Inject
 
 interface IValidationService {
-    fun isValidProduct(product: ProductInputState): ProductValidationResult
-    /*fun isValidName(): ProductValidationResult
-    fun isValidBrand(): ProductValidationResult
-    fun isValidQuantity(): ProductValidationResult
-    fun isValidWeight(): ProductValidationResult
-    fun isValidManufactureYear(): ProductValidationResult
-    fun isValidPrice(): ProductValidationResult
-    fun isValidProductType(): ProductValidationResult
-    fun isValidStockStatus(): ProductValidationResult
-    fun isValidWarranty(): ProductValidationResult*/
+    fun isValidProduct(inputState: ProductInputState): ProductValidationResult
 }
 
 class ValidationService @Inject constructor() : IValidationService {
 
-    override fun isValidProduct(product: ProductInputState): ProductValidationResult {
+    override fun isValidProduct(inputState: ProductInputState): ProductValidationResult {
 
-        val name = product.productName
-        val brand = product.productBrand
-        val price: Double
-        val manufactureYear: Int
-        val warranty: Int
-        val weight: Double
-        val quantity: Int
-        val inStock: Boolean
-        val type: String = product.productType
-        val imageUrl: String
-        val imageUrlStorageLocation: String
-        val isDummyProduct: Boolean
+        val nameValidationResult = isNameInValid(inputState.productName)
+        val priceValidationResult = isPriceValid(inputState.productPrice)
+        val brandValidationResult = isBrandValid(inputState.productBrand)
+        val manufactureYearValidationResult = isManufactureYearValid(inputState.productManufactureYear)
+        val warrantyValidationResult = isWarrantyValid(inputState.productWarranty)
+        val weightValidationResult = isWeightValid(inputState.productWeight)
+        val quantityValidationResult = isQuantityValid(inputState.productQuantity)
+        val stockStatusValidationResult = isStockStatusValid(inputState.productStockStatus)
+        val typeValidationResult = isTypeValid(inputState.productType)
+        val imageUrlStorageLocationValidationResult = isImageUriValid(inputState.productImageUri)
 
-        val nameValidationResult = isNameInValid(product.productName)
-        val priceValidationResult = isPriceValid(product.productPrice)
-        val brandValidationResult = isBrandValid(product.productBrand)
-        val manufactureYearValidationResult = isManufactureYearValid(product.productManufactureYear)
-        val warrantyValidationResult = isWarrantyValid(product.productWarranty)
-        val weightValidationResult = isWeightValid(product.productWeight)
-        val quantityValidationResult = isQuantityValid(product.productQuantity)
-        val stockStatusValidationResult = isStockStatusValid(product.productStockStatus)
-        val typeValidationResult = isTypeValid(product.productType)
+        if(!imageUrlStorageLocationValidationResult.first) {
+            return ProductValidationResult(
+                productDomain = null,
+                validationSuccessful = imageUrlStorageLocationValidationResult.first,
+                errorMessage = imageUrlStorageLocationValidationResult.second
+            )
+        }
 
         if(!nameValidationResult.first){
             return ProductValidationResult(
@@ -120,19 +107,18 @@ class ValidationService @Inject constructor() : IValidationService {
             )
         }
 
-
         val productDomain = ProductDomain(
-            brand = product.productBrand,
-            warranty = product.productWarranty.toInt(),
-            manufactureYear = product.productManufactureYear.toInt(),
-            weight = product.productWeight.toDouble(),
-            price = product.productPrice.toDouble(),
-            quantity = product.productQuantity.toInt(),
-            inStock = product.productStockStatus == "in_stock",
-            name = product.productName,
-            type = product.productType,
+            brand = inputState.productBrand,
+            warranty = inputState.productWarranty.toInt(),
+            manufactureYear = inputState.productManufactureYear.toInt(),
+            weight = inputState.productWeight.toDouble(),
+            price = inputState.productPrice.toDouble(),
+            quantity = inputState.productQuantity.toInt(),
+            inStock = inputState.productStockStatus == "in_stock",
+            name = inputState.productName,
+            type = inputState.productType,
             imageUrl = "https://organicthemes.com/demo/profile/files/2018/05/profile-pic.jpg",
-            imageUrlStorageLocation = "",
+            imageUriStorage = inputState.productImageUri,
             isDummyProduct = false
         )
 
@@ -140,6 +126,17 @@ class ValidationService @Inject constructor() : IValidationService {
             productDomain = productDomain,
             validationSuccessful = true,
             errorMessage = null)
+    }
+
+    private fun isImageUriValid(productImageUri: String): Pair<Boolean, StringWrapper?>{
+        if (productImageUri.isEmpty()) {
+            return Pair(
+                false,
+                StringWrapper.ResourceStringWrapper(id = R.string.image_uri_empty_error_message)
+            )
+        }
+
+        return Pair(true, null)
     }
 
     private fun isTypeValid(productType: String): Pair<Boolean, StringWrapper?> {

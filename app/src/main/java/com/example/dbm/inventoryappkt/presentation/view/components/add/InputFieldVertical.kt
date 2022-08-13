@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -47,6 +48,7 @@ fun InputFieldVertical(
     ) {
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
+            color = MaterialTheme.colors.onPrimary,
             fontSize = fontSize,
             fontWeight = fontWeight,
             text = text
@@ -79,7 +81,10 @@ fun InputFieldVertical(
                     visualTransformation = VisualTransformation.None,
                     innerTextField = innerTextField,
                     placeholder = {
-                        Text(text = placeholder)
+                        Text(
+                            text = placeholder,
+                            color = MaterialTheme.colors.onPrimary,
+                        )
                     },
                     enabled = true,
                     interactionSource = remember { MutableInteractionSource() },

@@ -88,7 +88,8 @@ fun ProductRemover(
             )
         ) {
             Text(
-                text = stringResource(id = R.string.delete_product_button_text)
+                text = stringResource(id = R.string.delete_product_button_text),
+                color = MaterialTheme.colors.onPrimary,
             )
         }
     }

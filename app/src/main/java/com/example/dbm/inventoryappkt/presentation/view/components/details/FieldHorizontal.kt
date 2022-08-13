@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +29,7 @@ fun FieldHorizontal(
     ) {
         Text(
             text = title,
+            color = MaterialTheme.colors.onPrimary,
             fontSize = fontSize,
             fontWeight = fontWeight,
             modifier = Modifier
@@ -36,6 +38,7 @@ fun FieldHorizontal(
         Text(
             text = value,
             fontSize = fontSize,
+            color = MaterialTheme.colors.onPrimary,
             fontWeight = fontWeight,
             modifier = Modifier
                 .wrapContentHeight()

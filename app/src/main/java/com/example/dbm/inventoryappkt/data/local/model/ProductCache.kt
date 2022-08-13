@@ -17,6 +17,6 @@ data class ProductCache(
     val name: String,
     val type: String,
     val imageUrl: String,
-    val imageUrlStorageLocation: String,
+    val imageUriStorage: String,
     val isDummyProduct: Boolean
 )

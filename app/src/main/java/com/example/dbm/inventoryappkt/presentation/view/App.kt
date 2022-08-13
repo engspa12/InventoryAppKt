@@ -67,6 +67,8 @@ fun App(
                 navigationType = navigationType,
                 goBackToMain = {
                     navController.popBackStack()
+                    scaffoldState.snackbarHostState
+                        .currentSnackbarData?.dismiss()
                 },
                 onDismissMenu = {
                     showMenu = false

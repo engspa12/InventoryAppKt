@@ -11,7 +11,7 @@ data class ProductDomain(
     val inStock: Boolean,
     val name: String,
     val type: String,
-    val imageUrl: String,
-    val imageUrlStorageLocation: String,
+    var imageUrl: String,
+    val imageUriStorage: String,
     val isDummyProduct: Boolean
 )

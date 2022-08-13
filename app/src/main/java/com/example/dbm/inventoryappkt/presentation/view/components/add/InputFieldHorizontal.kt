@@ -4,10 +4,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -45,6 +42,7 @@ fun InputFieldHorizontal(
         Text(
             text = text,
             fontSize = fontSize,
+            color = MaterialTheme.colors.onPrimary,
             fontWeight = fontWeight,
             modifier = Modifier
                 .padding(end = 10.dp)
@@ -78,7 +76,10 @@ fun InputFieldHorizontal(
                     visualTransformation = VisualTransformation.None,
                     innerTextField = innerTextField,
                     placeholder = {
-                        Text(text = placeholder)
+                        Text(
+                            text = placeholder,
+                            color = MaterialTheme.colors.onPrimary,
+                        )
                     },
                     enabled = true,
                     interactionSource = remember { MutableInteractionSource() },

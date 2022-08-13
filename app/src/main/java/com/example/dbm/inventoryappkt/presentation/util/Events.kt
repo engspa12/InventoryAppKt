@@ -17,6 +17,7 @@ sealed class ProductDetailsChangeEvent {
     data class TypeChanged(val type: Map.Entry<String, StringWrapper>): ProductDetailsChangeEvent()
     data class StockStatusChanged(val stockStatus: Map.Entry<String, StringWrapper>): ProductDetailsChangeEvent()
     data class WarrantyChanged(val warranty: String): ProductDetailsChangeEvent()
+    data class ImageSelectedChanged(val uri: String): ProductDetailsChangeEvent()
 }
 
 sealed class ProductActionEvent {

@@ -42,6 +42,7 @@ fun QuantityEditor(
         ) {
             Text(
                 text = stringResource(id = R.string.quantity_minus),
+                color = MaterialTheme.colors.onPrimary,
                 letterSpacing = 4.sp
             )
         }
@@ -61,6 +62,7 @@ fun QuantityEditor(
         ) {
             Text(
                 text = stringResource(id = R.string.quantity_plus),
+                color = MaterialTheme.colors.onPrimary,
                 letterSpacing = 4.sp
             )
         }

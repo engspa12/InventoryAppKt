@@ -3,6 +3,7 @@ package com.example.dbm.inventoryappkt.presentation.view.components.details
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ fun FieldVertical(
     ) {
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
+            color = MaterialTheme.colors.onPrimary,
             fontSize = fontSize,
             fontWeight = fontWeight,
             text = title
@@ -32,6 +34,7 @@ fun FieldVertical(
         Text(
             modifier = Modifier
                 .wrapContentHeight(),
+            color = MaterialTheme.colors.onPrimary,
             fontSize = fontSize,
             fontWeight = fontWeight,
             text = value

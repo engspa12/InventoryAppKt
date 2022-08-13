@@ -3,6 +3,7 @@ package com.example.dbm.inventoryappkt.presentation.view.components.details
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,6 +27,9 @@ fun SupplierOrderButton(
             backgroundColor = colorResource(id = R.color.regular_button_background)
         )
     ) {
-        Text(text = stringResource(id = R.string.order_from_supplier))
+        Text(
+            text = stringResource(id = R.string.order_from_supplier),
+            color = MaterialTheme.colors.onPrimary,
+        )
     }
 }

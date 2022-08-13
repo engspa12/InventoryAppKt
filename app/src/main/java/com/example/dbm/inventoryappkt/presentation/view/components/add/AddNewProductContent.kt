@@ -1,5 +1,7 @@
 package com.example.dbm.inventoryappkt.presentation.view.components.add
 
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -22,6 +24,7 @@ import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEven
 
 @Composable
 fun AddNewProductContent(
+    bitmap: Bitmap?,
     inputState: ProductInputState,
     onChangeEvent: (ProductDetailsChangeEvent) -> Unit,
     onSelectImageButtonClicked: () -> Unit
@@ -34,6 +37,7 @@ fun AddNewProductContent(
     ) {
         item {
             ImageSelector(
+                bitmap = bitmap,
                 onSelectImageButtonClicked = {
                     onSelectImageButtonClicked()
                 },
