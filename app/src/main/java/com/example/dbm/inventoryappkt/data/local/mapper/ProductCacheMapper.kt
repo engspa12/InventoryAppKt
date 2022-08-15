@@ -19,7 +19,7 @@ class ProductCacheMapper: CacheMapper<ProductCache, ProductDomain> {
             name = dto.name,
             type = dto.type,
             imageUrl = dto.imageUrl,
-            imageUriStorage = dto.imageUriStorage,
+            imageUriInDeviceString = dto.imageUriInDeviceString,
             isDummyProduct = dto.isDummyProduct
         )
     }
@@ -36,7 +36,7 @@ class ProductCacheMapper: CacheMapper<ProductCache, ProductDomain> {
             name = domainModel.name,
             type = domainModel.type,
             imageUrl = domainModel.imageUrl,
-            imageUriStorage = domainModel.imageUriStorage,
+            imageUriInDeviceString = domainModel.imageUriInDeviceString,
             isDummyProduct = domainModel.isDummyProduct
         )
     }

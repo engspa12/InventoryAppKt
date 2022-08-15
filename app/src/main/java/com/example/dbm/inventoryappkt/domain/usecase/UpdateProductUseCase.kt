@@ -11,6 +11,7 @@ interface IUpdateProductUseCase {
 class UpdateProductUseCase @Inject constructor(
     private val productsRepository: IProductsRepository
 ): IUpdateProductUseCase {
+
     override suspend fun invoke(product: ProductDomain) {
         productsRepository.updateProduct(product)
     }

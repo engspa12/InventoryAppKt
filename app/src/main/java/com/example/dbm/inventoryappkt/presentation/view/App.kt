@@ -155,6 +155,17 @@ fun App(
                             saveProductDetails = false
                             navController.popBackStack()
                         },
+                        onErrorOccurred = { errorMessage ->
+                            keyboardController?.hide()
+                            saveProductDetails = false
+                            if(errorMessage != null){
+                                coroutineScope.launch {
+                                    scaffoldState.snackbarHostState.showSnackbar(
+                                        errorMessage
+                                    )
+                                }
+                            }
+                        },
                         onLoadingContent = { loadingContent ->
                             loadingScreenContent = loadingContent
                         }

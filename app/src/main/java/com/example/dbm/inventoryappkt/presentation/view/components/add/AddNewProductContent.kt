@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -72,7 +73,8 @@ fun AddNewProductContent(
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             capitalization = KeyboardCapitalization.Words,
-                            keyboardType = KeyboardType.Text
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
                         )
                     )
                     InputFieldVertical(
@@ -85,7 +87,8 @@ fun AddNewProductContent(
                             onChangeEvent(ProductDetailsChangeEvent.PriceChanged(it))
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
                         )
                     )
                     InputFieldVertical(
@@ -98,7 +101,8 @@ fun AddNewProductContent(
                             onChangeEvent(ProductDetailsChangeEvent.ManufactureYearChanged(it))
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
                         )
                     )
                 }
@@ -126,7 +130,8 @@ fun AddNewProductContent(
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             capitalization = KeyboardCapitalization.Words,
-                            keyboardType = KeyboardType.Number
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
                         )
                     )
                     InputFieldVertical(
@@ -140,7 +145,8 @@ fun AddNewProductContent(
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             capitalization = KeyboardCapitalization.Words,
-                            keyboardType = KeyboardType.Text
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
                         )
                     )
                     InputFieldVertical(
@@ -154,7 +160,8 @@ fun AddNewProductContent(
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             capitalization = KeyboardCapitalization.Words,
-                            keyboardType = KeyboardType.Number
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
                         )
                     )
                 }
@@ -205,7 +212,8 @@ fun AddNewProductContent(
                     onChangeEvent(ProductDetailsChangeEvent.WarrantyChanged(it))
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
                 ),
                 modifier = Modifier
                     .padding(top = 10.dp)

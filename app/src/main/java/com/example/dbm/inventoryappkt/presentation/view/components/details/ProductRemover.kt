@@ -54,6 +54,7 @@ fun ProductRemover(
                 imageModel = productUrlImage,
                 requestOptions = {
                     RequestOptions()
+                        .override(120,100)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .centerCrop()
                 },

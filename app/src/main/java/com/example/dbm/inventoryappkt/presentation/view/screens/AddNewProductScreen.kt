@@ -8,19 +8,16 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
 import com.example.dbm.inventoryappkt.presentation.util.ValidationEvent
 import com.example.dbm.inventoryappkt.presentation.view.components.add.AddNewProductContent
+import com.example.dbm.inventoryappkt.presentation.view.components.shared.ProgressBar
 import com.example.dbm.inventoryappkt.presentation.viewmodel.AddNewProductViewModel
-import com.example.dbm.inventoryappkt.util.StringWrapper
 
 @Composable
 fun AddNewProductScreen(
@@ -33,6 +30,7 @@ fun AddNewProductScreen(
 ) {
 
     val inputState = viewModel.uiState
+    val progressBarMessage by viewModel.progressBar.collectAsState()
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -76,14 +74,24 @@ fun AddNewProductScreen(
         }
     }
 
-    AddNewProductContent(
-        bitmap = bitmap,
-        inputState = inputState,
-        onChangeEvent = { event ->
-            viewModel.onEvent(event)
-        },
-        onSelectImageButtonClicked = {
-            launcher.launch("image/*")
-        }
-    )
+    if(progressBarMessage == null){
+        AddNewProductContent(
+            bitmap = bitmap,
+            inputState = inputState,
+            onChangeEvent = { event ->
+                viewModel.onEvent(event)
+            },
+            onSelectImageButtonClicked = {
+                launcher.launch("image/*")
+            }
+        )
+    } else {
+        ProgressBar(
+            message = progressBarMessage!!.asString(),
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentHeight(Alignment.CenterVertically)
+        )
+    }
+
 }

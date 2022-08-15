@@ -72,4 +72,8 @@
     <string name="quantity_list_item">Quantity: %1$d</string>
     <string name="price_list_item">Price: $ %1$.2f</string>
     <string name="new_sale_button_text">New Sale</string>
+    <string name="user_not_authenticated">User is not authenticated, please sign in to proceed</string>
+    <string name="error_upload_firebase">An error occurred while uploading to the Storage service</string>
+    <string name="error_deletion_firebase">An error occurred while deleting from the Storage service</string>
+    <string name="error_unknown_firebase">An error occurred with the next message: %1$s</string>
 </resources>

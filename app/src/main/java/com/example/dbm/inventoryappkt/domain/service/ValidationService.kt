@@ -25,7 +25,7 @@ class ValidationService @Inject constructor() : IValidationService {
         val quantityValidationResult = isQuantityValid(inputState.productQuantity)
         val stockStatusValidationResult = isStockStatusValid(inputState.productStockStatus)
         val typeValidationResult = isTypeValid(inputState.productType)
-        val imageUrlStorageLocationValidationResult = isImageUriValid(inputState.productImageUri)
+        val imageUrlStorageLocationValidationResult = isImageUriValid(inputState.productImageUriInDeviceString)
 
         if(!imageUrlStorageLocationValidationResult.first) {
             return ProductValidationResult(
@@ -118,7 +118,7 @@ class ValidationService @Inject constructor() : IValidationService {
             name = inputState.productName,
             type = inputState.productType,
             imageUrl = "https://organicthemes.com/demo/profile/files/2018/05/profile-pic.jpg",
-            imageUriStorage = inputState.productImageUri,
+            imageUriInDeviceString = inputState.productImageUriInDeviceString,
             isDummyProduct = false
         )
 

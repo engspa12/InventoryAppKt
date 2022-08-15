@@ -5,16 +5,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
+import com.example.dbm.inventoryappkt.domain.service.IUserService
 import com.example.dbm.inventoryappkt.domain.service.IValidationService
+import com.example.dbm.inventoryappkt.presentation.state.MainState
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
 import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
 import com.example.dbm.inventoryappkt.presentation.util.ValidationEvent
+import com.example.dbm.inventoryappkt.util.ResultWrapper
 import com.example.dbm.inventoryappkt.util.StringWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,11 +29,15 @@ import javax.inject.Inject
 class AddNewProductViewModel @Inject constructor(
     private val productsService: IProductsService,
     private val validationService: IValidationService,
+    private val userService: IUserService,
     @DispatchersModule.MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ): ViewModel() {
 
     var uiState by mutableStateOf(ProductInputState())
         private set
+
+    private val _progressBar = MutableStateFlow<StringWrapper?>(null)
+    val progressBar: StateFlow<StringWrapper?> = _progressBar
 
     private val validationEventChannel = Channel<ValidationEvent>()
     val validationEvent = validationEventChannel.receiveAsFlow()
@@ -62,26 +72,41 @@ class AddNewProductViewModel @Inject constructor(
                 uiState = uiState.copy(productWeight = event.weight)
             }
             is ProductDetailsChangeEvent.ImageSelectedChanged -> {
-                uiState = uiState.copy(productImageUri = event.uri)
+                uiState = uiState.copy(productImageUriInDeviceString = event.uri)
             }
         }
+    }
+
+    private fun showProgressBar(){
+        _progressBar.value = StringWrapper.ResourceStringWrapper(id = R.string.loading_adding_product)
+    }
+
+    private fun hideProgressBar(){
+        _progressBar.value = null
     }
 
     fun addNewProduct() {
         val result = validationService.isValidProduct(uiState)
         if (result.validationSuccessful){
             if(result.productDomain != null){
+
+                showProgressBar()
+
                 viewModelScope.launch(mainDispatcher) {
-                    when(productsService.addProduct(result.productDomain)) {
-                        "Success" -> {
-                            validationEventChannel.send(ValidationEvent.Success)
+                    if(userService.getUser() != null){
+                        when(val resultAddition = productsService.addProduct(result.productDomain)) {
+                            is ResultWrapper.Success -> {
+                                validationEventChannel.send(ValidationEvent.Success)
+                            }
+                            is ResultWrapper.Failure -> {
+                                validationEventChannel.send(ValidationEvent.Failure(errorMessage = resultAddition.errorMessage))
+                            }
                         }
-                        else -> {
-                            validationEventChannel.send(ValidationEvent.Failure(errorMessage = result.errorMessage))
-                        }
+                    } else {
+                        validationEventChannel.send(ValidationEvent.Failure(StringWrapper.ResourceStringWrapper(id = R.string.user_not_authenticated)))
                     }
-                    //println(result.productDomain)
-                    //validationEventChannel.send(ValidationEvent.Success)
+
+                    hideProgressBar()
                 }
             }
         } else {

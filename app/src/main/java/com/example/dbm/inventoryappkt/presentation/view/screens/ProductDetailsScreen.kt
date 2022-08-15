@@ -26,6 +26,7 @@ fun ProductDetailsScreen(
     saveProductDetails: Boolean,
     onProductSaved: () -> Unit,
     onProductDeleted: () -> Unit,
+    onErrorOccurred: (String?) -> Unit,
     onLoadingContent: (Boolean) -> Unit
 ) {
 
@@ -47,6 +48,11 @@ fun ProductDetailsScreen(
                 }
                 is ProductActionEvent.ProductDeleted -> {
                     onProductDeleted()
+                }
+                is ProductActionEvent.Error -> {
+                    val args = event.errorMessage.getStringArgs()
+                    val errorMessage = context.getString(event.errorMessage.getStringIdResource() ?: 0, if(args.isNotEmpty()) args[0] else "")
+                    onErrorOccurred(errorMessage)
                 }
             }
         }

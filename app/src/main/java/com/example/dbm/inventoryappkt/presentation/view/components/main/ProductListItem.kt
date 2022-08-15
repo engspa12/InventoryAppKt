@@ -56,6 +56,7 @@ fun ProductListItem(
                 imageModel = listItem.productUrlImage,
                 requestOptions = {
                     RequestOptions()
+                        .override(120,100)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .centerCrop()
                 },

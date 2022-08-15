@@ -23,4 +23,5 @@ sealed class ProductDetailsChangeEvent {
 sealed class ProductActionEvent {
     object ProductUpdated: ProductActionEvent()
     object ProductDeleted: ProductActionEvent()
+    data class Error(val errorMessage: StringWrapper): ProductActionEvent()
 }

@@ -1,12 +1,16 @@
 package com.example.dbm.inventoryappkt.data.repository
 
+import android.net.Uri
+import android.util.Log
 import com.example.dbm.inventoryappkt.data.local.datasource.ProductsDao
 import com.example.dbm.inventoryappkt.data.local.model.ProductCache
+import com.example.dbm.inventoryappkt.data.network.datasource.FirebaseStorageResult
 import com.example.dbm.inventoryappkt.data.network.datasource.IFirebaseDataSource
 import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.model.ProductDomain
 import com.example.dbm.inventoryappkt.domain.repository.IProductsRepository
 import com.example.dbm.inventoryappkt.domain.util.CacheMapper
+import com.example.dbm.inventoryappkt.util.ResultWrapper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -35,10 +39,26 @@ class ProductsRepository @Inject constructor(
         }
     }
 
-    override suspend fun addProduct(productDomain: ProductDomain) {
-        withContext(dispatcher) {
-            val productCache = cacheMapper.mapFromDomainModel(productDomain)
-            localDataSource.saveProduct(productCache)
+    override suspend fun addProduct(productDomain: ProductDomain): ResultWrapper {
+        return withContext(dispatcher) {
+            if(productDomain.isDummyProduct){
+                val productCache = cacheMapper.mapFromDomainModel(productDomain)
+                localDataSource.saveProduct(productCache)
+                ResultWrapper.Success
+            } else {
+                when(val result = networkDataSource.uploadImageToStorage(Uri.parse(productDomain.imageUriInDeviceString))) {
+                    is FirebaseStorageResult.Success -> {
+                        productDomain.imageUrl = result.downloadUrl
+                        val productCache = cacheMapper.mapFromDomainModel(productDomain)
+                        localDataSource.saveProduct(productCache)
+                        ResultWrapper.Success
+                    }
+                    is FirebaseStorageResult.Error -> {
+                        Log.e("ProductsRepository", result.error)
+                        ResultWrapper.Failure(exception = result.exception)
+                    }
+                }
+            }
         }
     }
 
@@ -50,9 +70,24 @@ class ProductsRepository @Inject constructor(
         }
     }
 
-    override suspend fun removeProduct(productId: Int) {
-        withContext(dispatcher) {
-            localDataSource.deleteProductById(productId)
+    override suspend fun deleteProduct(productId: Int): ResultWrapper {
+        return withContext(dispatcher) {
+            val product = getProductById(productId)
+            if(product.isDummyProduct){
+                localDataSource.deleteProductById(productId)
+                ResultWrapper.Success
+            } else {
+                when(val result = networkDataSource.deleteProductInStorage(Uri.parse(product.imageUriInDeviceString))){
+                    is FirebaseStorageResult.Success -> {
+                        localDataSource.deleteProductById(productId)
+                        ResultWrapper.Success
+                    }
+                    is FirebaseStorageResult.Error -> {
+                        Log.e("ProductsRepository", result.error)
+                        ResultWrapper.Failure(exception = result.exception)
+                    }
+                }
+            }
         }
     }
 

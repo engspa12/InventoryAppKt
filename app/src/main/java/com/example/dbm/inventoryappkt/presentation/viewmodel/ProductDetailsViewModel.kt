@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
+import com.example.dbm.inventoryappkt.domain.service.IUserService
 import com.example.dbm.inventoryappkt.domain.util.ProductModification
 import com.example.dbm.inventoryappkt.presentation.state.ProductDetailsState
 import com.example.dbm.inventoryappkt.presentation.util.ProductActionEvent
+import com.example.dbm.inventoryappkt.util.ResultWrapper
 import com.example.dbm.inventoryappkt.util.StringWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductDetailsViewModel @Inject constructor(
     private val productsService: IProductsService,
+    private val userService: IUserService,
     @DispatchersModule.MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ): ViewModel() {
 
@@ -41,9 +44,22 @@ class ProductDetailsViewModel @Inject constructor(
     fun deleteProduct(productId: Int){
         showProgressBar(R.string.loading_deleting_product)
         viewModelScope.launch(mainDispatcher) {
-            productsService.deleteProduct(productId)
-            delay(1000L)
-            _productActionEvent.send(ProductActionEvent.ProductDeleted)
+
+            if(userService.getUser() != null) {
+                when(val resultDeletion = productsService.deleteProduct(productId)){
+                    is ResultWrapper.Success -> {
+                        _productActionEvent.send(ProductActionEvent.ProductDeleted)
+                    }
+                    is ResultWrapper.Failure -> {
+                        _productActionEvent.send(ProductActionEvent.Error(errorMessage = resultDeletion.errorMessage))
+                        delay(200L)
+                        getProductDetails(productId)
+                    }
+                }
+            } else {
+                _productActionEvent.send(ProductActionEvent.Error(StringWrapper.ResourceStringWrapper(id = R.string.user_not_authenticated)))
+            }
+
         }
     }
 

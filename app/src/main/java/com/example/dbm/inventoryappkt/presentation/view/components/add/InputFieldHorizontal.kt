@@ -3,14 +3,17 @@ package com.example.dbm.inventoryappkt.presentation.view.components.add
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -21,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dbm.inventoryappkt.R
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun InputFieldHorizontal(
     text: String,
@@ -33,6 +36,8 @@ fun InputFieldHorizontal(
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier
 ){
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Row(
         modifier = modifier
             .padding(start =  10.dp, end = 10.dp),
@@ -64,6 +69,11 @@ fun InputFieldHorizontal(
                 onInputValueChanged(it)
             },
             keyboardOptions = keyboardOptions,
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                }
+            ),
             textStyle = TextStyle(
                 color = colorResource(id = R.color.white),
                 fontSize = 18.sp,

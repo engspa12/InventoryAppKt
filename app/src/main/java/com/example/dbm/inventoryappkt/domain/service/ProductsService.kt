@@ -8,17 +8,18 @@ import com.example.dbm.inventoryappkt.domain.util.toListView
 import com.example.dbm.inventoryappkt.global.Constants
 import com.example.dbm.inventoryappkt.presentation.model.ProductDetailsView
 import com.example.dbm.inventoryappkt.presentation.model.ProductListView
+import com.example.dbm.inventoryappkt.util.ResultWrapper
 import javax.inject.Inject
 
 interface IProductsService {
     suspend fun getProducts(): List<ProductListView>
     suspend fun getProductDetails(productId: Int): ProductDetailsView
     suspend fun insertDummyProduct()
-    suspend fun addProduct(product: ProductDomain): String
+    suspend fun addProduct(product: ProductDomain): ResultWrapper
     suspend fun saveModifiedProduct(productId: Int)
     suspend fun reduceProductQuantity(productId: Int)
     fun modifyProductForView(action: ProductModification): ProductDetailsView
-    suspend fun deleteProduct(productId: Int)
+    suspend fun deleteProduct(productId: Int): ResultWrapper
 }
 
 class ProductsService @Inject constructor(
@@ -55,15 +56,14 @@ class ProductsService @Inject constructor(
             name = "Men's Shirt",
             type = "clothing",
             imageUrl = "",
-            imageUriStorage = "",
+            imageUriInDeviceString = "",
             isDummyProduct = true
         )
         addProductUseCase(product = productDomain)
     }
 
-    override suspend fun addProduct(product: ProductDomain) : String {
-        addProductUseCase(product)
-        return "Success"
+    override suspend fun addProduct(product: ProductDomain) : ResultWrapper {
+        return addProductUseCase(product)
     }
 
     override suspend fun reduceProductQuantity(productId: Int) {
@@ -107,8 +107,8 @@ class ProductsService @Inject constructor(
         }
     }
 
-    override suspend fun deleteProduct(productId: Int) {
-        deleteProductUseCase(productId)
+    override suspend fun deleteProduct(productId: Int): ResultWrapper {
+        return deleteProductUseCase(productId)
     }
 
 }

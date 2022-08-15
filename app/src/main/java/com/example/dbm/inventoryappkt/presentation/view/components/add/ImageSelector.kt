@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,7 +29,6 @@ import com.example.dbm.inventoryappkt.R
 
 @Composable
 fun ImageSelector(
-    //imageUri: Uri?,
     bitmap: Bitmap?,
     onSelectImageButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
@@ -46,6 +46,7 @@ fun ImageSelector(
                     .weight(1f)
                     .padding(start = 20.dp),
                 bitmap = bitmap.asImageBitmap(),
+                contentScale = ContentScale.FillBounds,
                 contentDescription = stringResource(id = R.string.select_image_content_description)
             )
         } else {

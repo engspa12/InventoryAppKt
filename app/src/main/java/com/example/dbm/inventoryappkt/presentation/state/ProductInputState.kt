@@ -15,7 +15,7 @@ data class ProductInputState(
     var productStockStatusText: StringWrapper = StringWrapper.SimpleStringWrapper(""),
     var productStockStatus: String = "",
     var productWarranty: String = "",
-    var productImageUri: String = "",
+    var productImageUriInDeviceString: String = "",
     val categoryOptions: Map<String, StringWrapper> = mapOf(
         "sports" to StringWrapper.ResourceStringWrapper(id = R.string.sports_category),
         "technology" to StringWrapper.ResourceStringWrapper(id = R.string.technology_category),
