@@ -93,20 +93,22 @@ class AddNewProductViewModel @Inject constructor(
                 showProgressBar()
 
                 viewModelScope.launch(mainDispatcher) {
-                    if(userService.getUser() != null){
-                        when(val resultAddition = productsService.addProduct(result.productDomain)) {
-                            is ResultWrapper.Success -> {
-                                validationEventChannel.send(ValidationEvent.Success)
+                    userService.getUserId().collect { userId ->
+                        if(userId != null && userId != ""){
+                            when(val resultAddition = productsService.addProduct(result.productDomain)) {
+                                is ResultWrapper.Success -> {
+                                    validationEventChannel.send(ValidationEvent.Success)
+                                }
+                                is ResultWrapper.Failure -> {
+                                    validationEventChannel.send(ValidationEvent.Failure(errorMessage = resultAddition.errorMessage))
+                                }
                             }
-                            is ResultWrapper.Failure -> {
-                                validationEventChannel.send(ValidationEvent.Failure(errorMessage = resultAddition.errorMessage))
-                            }
+                        } else {
+                            validationEventChannel.send(ValidationEvent.Failure(StringWrapper.ResourceStringWrapper(id = R.string.user_not_authenticated)))
                         }
-                    } else {
-                        validationEventChannel.send(ValidationEvent.Failure(StringWrapper.ResourceStringWrapper(id = R.string.user_not_authenticated)))
-                    }
 
-                    hideProgressBar()
+                        hideProgressBar()
+                    }
                 }
             }
         } else {

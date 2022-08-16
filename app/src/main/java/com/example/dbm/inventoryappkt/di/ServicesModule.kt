@@ -36,7 +36,10 @@ object ServicesModule {
 
     @Provides
     @Singleton
-    fun provideUserService(): IUserService {
-        return UserService()
+    fun provideUserService(
+        setUserIdUseCase: ISetUserIdUseCase,
+        getUserIdUseCase: IGetUserIdUseCase
+    ): IUserService {
+        return UserService(setUserIdUseCase, getUserIdUseCase)
     }
 }

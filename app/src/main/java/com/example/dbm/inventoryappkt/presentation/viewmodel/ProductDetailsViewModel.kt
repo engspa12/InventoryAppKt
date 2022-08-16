@@ -17,6 +17,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,22 +45,22 @@ class ProductDetailsViewModel @Inject constructor(
     fun deleteProduct(productId: Int){
         showProgressBar(R.string.loading_deleting_product)
         viewModelScope.launch(mainDispatcher) {
-
-            if(userService.getUser() != null) {
-                when(val resultDeletion = productsService.deleteProduct(productId)){
-                    is ResultWrapper.Success -> {
-                        _productActionEvent.send(ProductActionEvent.ProductDeleted)
+            userService.getUserId().collect { userId ->
+                if(userId != null && userId != "") {
+                    when(val resultDeletion = productsService.deleteProduct(productId)){
+                        is ResultWrapper.Success -> {
+                            _productActionEvent.send(ProductActionEvent.ProductDeleted)
+                        }
+                        is ResultWrapper.Failure -> {
+                            _productActionEvent.send(ProductActionEvent.Error(errorMessage = resultDeletion.errorMessage))
+                            delay(200L)
+                            getProductDetails(productId)
+                        }
                     }
-                    is ResultWrapper.Failure -> {
-                        _productActionEvent.send(ProductActionEvent.Error(errorMessage = resultDeletion.errorMessage))
-                        delay(200L)
-                        getProductDetails(productId)
-                    }
+                } else {
+                    _productActionEvent.send(ProductActionEvent.Error(StringWrapper.ResourceStringWrapper(id = R.string.user_not_authenticated)))
                 }
-            } else {
-                _productActionEvent.send(ProductActionEvent.Error(StringWrapper.ResourceStringWrapper(id = R.string.user_not_authenticated)))
             }
-
         }
     }
 

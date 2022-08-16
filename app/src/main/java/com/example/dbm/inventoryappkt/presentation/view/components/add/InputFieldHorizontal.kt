@@ -57,11 +57,11 @@ fun InputFieldHorizontal(
                 .wrapContentHeight()
                 .weight(1f)
                 .onFocusChanged {
-                    if(it.isFocused){
-                        println("I HAVE focus with $text")
+                    /*if(it.isFocused){
+
                     } else {
-                        println("I DO NOT HAVE focus with $text")
-                    }
+
+                    }*/
                 },
             maxLines = 1,
             value = inputValue,

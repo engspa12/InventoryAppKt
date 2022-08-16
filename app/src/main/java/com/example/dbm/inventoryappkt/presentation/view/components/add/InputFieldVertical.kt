@@ -62,11 +62,11 @@ fun InputFieldVertical(
             modifier = Modifier
                 .wrapContentHeight()
                 .onFocusChanged {
-                    if(it.isFocused){
-                        println("I HAVE focus with $text")
+                    /*if(it.isFocused){
+
                     } else {
-                        println("I DO NOT HAVE focus with $text")
-                    }
+
+                    }*/
                 },
             maxLines = 1,
             value = inputValue,
