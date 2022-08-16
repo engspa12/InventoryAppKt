@@ -47,7 +47,7 @@ fun App(
     var navigationType by rememberSaveable { mutableStateOf(Constants.NavType.NAV_MAIN) }
     var saveProductDetails by remember { mutableStateOf(false) }
     var insertDummyProduct by remember { mutableStateOf(false) }
-    var loadingScreenContent by remember { mutableStateOf(true) }
+    var loadingScreenContent by rememberSaveable { mutableStateOf(true) }
 
     Scaffold(
         scaffoldState = scaffoldState,

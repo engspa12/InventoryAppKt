@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
@@ -31,50 +32,56 @@ fun AddNewProductScreen(
 
     val inputState = viewModel.uiState
     val progressBarMessage by viewModel.progressBar.collectAsState()
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-        imageUri = uri
-        viewModel.onEvent(ProductDetailsChangeEvent.ImageSelectedChanged(imageUri.toString()))
-    }
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+            imageUri = uri
+            viewModel.onEvent(ProductDetailsChangeEvent.ImageSelectedChanged(imageUri.toString()))
+        }
 
-    LaunchedEffect(key1 = imageUri){
-        imageUri?.let {
-            bitmap = if (Build.VERSION.SDK_INT < 28) {
-                MediaStore.Images
-                    .Media.getBitmap(context.contentResolver,it)
-            } else {
-                val source = ImageDecoder
-                    .createSource(context.contentResolver,it)
-                ImageDecoder.decodeBitmap(source)
+    if (imageUri != null) {
+        LaunchedEffect(key1 = imageUri) {
+            imageUri?.let {
+                bitmap = if (Build.VERSION.SDK_INT < 28) {
+                    MediaStore.Images
+                        .Media.getBitmap(context.contentResolver, it)
+                } else {
+                    val source = ImageDecoder
+                        .createSource(context.contentResolver, it)
+                    ImageDecoder.decodeBitmap(source)
+                }
             }
         }
     }
 
-    if(addNewProduct){
+    if (addNewProduct) {
         LaunchedEffect(key1 = Unit) {
             onLoadingContent(true)
             viewModel.addNewProduct()
         }
     }
 
-    LaunchedEffect(key1 = Unit){
+    LaunchedEffect(key1 = Unit) {
         viewModel.validationEvent.collect { event ->
             onLoadingContent(false)
-            when(event) {
+            when (event) {
                 is ValidationEvent.Success -> {
                     onProductSaved()
                 }
                 is ValidationEvent.Failure -> {
                     val args = event.errorMessage?.getStringArgs()
-                    val errorMessage = context.getString(event.errorMessage?.getStringIdResource() ?: 0, if(args != null && args.isNotEmpty()) args[0] else "")
+                    val errorMessage = context.getString(
+                        event.errorMessage?.getStringIdResource() ?: 0,
+                        if (args != null && args.isNotEmpty()) args[0] else ""
+                    )
                     onErrorOccurred(errorMessage)
                 }
             }
         }
     }
 
-    if(progressBarMessage == null){
+    if (progressBarMessage == null) {
         AddNewProductContent(
             bitmap = bitmap,
             inputState = inputState,
@@ -86,12 +93,14 @@ fun AddNewProductScreen(
             }
         )
     } else {
-        ProgressBar(
-            message = progressBarMessage!!.asString(),
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentHeight(Alignment.CenterVertically)
-        )
+        progressBarMessage?.asString()?.let {
+            ProgressBar(
+                message = it,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentHeight(Alignment.CenterVertically)
+            )
+        }
     }
 
 }
