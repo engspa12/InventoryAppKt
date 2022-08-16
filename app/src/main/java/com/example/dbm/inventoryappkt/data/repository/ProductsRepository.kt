@@ -39,19 +39,19 @@ class ProductsRepository @Inject constructor(
         }
     }
 
-    override suspend fun addProduct(productDomain: ProductDomain): ResultWrapper {
+    override suspend fun addProduct(productDomain: ProductDomain): ResultWrapper<Unit> {
         return withContext(dispatcher) {
             if(productDomain.isDummyProduct){
                 val productCache = cacheMapper.mapFromDomainModel(productDomain)
                 localDataSource.saveProduct(productCache)
-                ResultWrapper.Success
+                ResultWrapper.Success(Unit)
             } else {
                 when(val result = networkDataSource.uploadImageToStorage(Uri.parse(productDomain.imageUriInDeviceString))) {
                     is FirebaseStorageResult.Success -> {
                         productDomain.imageUrl = result.downloadUrl
                         val productCache = cacheMapper.mapFromDomainModel(productDomain)
                         localDataSource.saveProduct(productCache)
-                        ResultWrapper.Success
+                        ResultWrapper.Success(Unit)
                     }
                     is FirebaseStorageResult.Error -> {
                         Log.e("ProductsRepository", result.error)
@@ -70,17 +70,17 @@ class ProductsRepository @Inject constructor(
         }
     }
 
-    override suspend fun deleteProduct(productId: Int): ResultWrapper {
+    override suspend fun deleteProduct(productId: Int): ResultWrapper<Unit> {
         return withContext(dispatcher) {
             val product = getProductById(productId)
             if(product.isDummyProduct){
                 localDataSource.deleteProductById(productId)
-                ResultWrapper.Success
+                ResultWrapper.Success(Unit)
             } else {
                 when(val result = networkDataSource.deleteProductInStorage(Uri.parse(product.imageUriInDeviceString))){
                     is FirebaseStorageResult.Success -> {
                         localDataSource.deleteProductById(productId)
-                        ResultWrapper.Success
+                        ResultWrapper.Success(Unit)
                     }
                     is FirebaseStorageResult.Error -> {
                         Log.e("ProductsRepository", result.error)

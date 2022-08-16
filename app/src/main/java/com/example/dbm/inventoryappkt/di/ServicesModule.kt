@@ -2,6 +2,7 @@ package com.example.dbm.inventoryappkt.di
 
 import com.example.dbm.inventoryappkt.domain.service.*
 import com.example.dbm.inventoryappkt.domain.usecase.*
+import com.example.dbm.inventoryappkt.util.IConnectionChecker
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,13 +20,15 @@ object ServicesModule {
         addProductUseCase: IAddProductUseCase,
         updateProductUseCase: IUpdateProductUseCase,
         deleteProductUseCase: IDeleteProductUseCase,
+        connectionChecker: IConnectionChecker
     ): IProductsService {
         return ProductsService(
             getProductsUseCase,
             getProductByIdUseCase,
             addProductUseCase,
             updateProductUseCase,
-            deleteProductUseCase
+            deleteProductUseCase,
+            connectionChecker
         )
     }
 

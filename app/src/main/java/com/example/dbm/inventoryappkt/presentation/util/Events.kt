@@ -20,8 +20,13 @@ sealed class ProductDetailsChangeEvent {
     data class ImageSelectedChanged(val uri: String): ProductDetailsChangeEvent()
 }
 
-sealed class ProductActionEvent {
-    object ProductUpdated: ProductActionEvent()
-    object ProductDeleted: ProductActionEvent()
-    data class Error(val errorMessage: StringWrapper): ProductActionEvent()
+sealed class ProductDetailsActionEvent {
+    object ProductDetailsUpdated: ProductDetailsActionEvent()
+    object ProductDetailsDeleted: ProductDetailsActionEvent()
+    data class Error(val errorMessage: StringWrapper): ProductDetailsActionEvent()
+}
+
+sealed class MainEvent {
+    data class ListChanged(val listHasItems: Boolean): MainEvent()
+    data class Error(val errorMessage: StringWrapper): MainEvent()
 }

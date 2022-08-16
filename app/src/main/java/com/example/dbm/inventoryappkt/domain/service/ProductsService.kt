@@ -1,5 +1,6 @@
 package com.example.dbm.inventoryappkt.domain.service
 
+import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.domain.model.ProductDomain
 import com.example.dbm.inventoryappkt.domain.usecase.*
 import com.example.dbm.inventoryappkt.domain.util.ProductModification
@@ -8,18 +9,20 @@ import com.example.dbm.inventoryappkt.domain.util.toListView
 import com.example.dbm.inventoryappkt.global.Constants
 import com.example.dbm.inventoryappkt.presentation.model.ProductDetailsView
 import com.example.dbm.inventoryappkt.presentation.model.ProductListView
+import com.example.dbm.inventoryappkt.util.IConnectionChecker
 import com.example.dbm.inventoryappkt.util.ResultWrapper
+import com.example.dbm.inventoryappkt.util.StringWrapper
 import javax.inject.Inject
 
 interface IProductsService {
-    suspend fun getProducts(): List<ProductListView>
+    suspend fun getProducts(): ResultWrapper<List<ProductListView>>
     suspend fun getProductDetails(productId: Int): ProductDetailsView
     suspend fun insertDummyProduct()
-    suspend fun addProduct(product: ProductDomain): ResultWrapper
+    suspend fun addProduct(product: ProductDomain): ResultWrapper<Unit>
     suspend fun saveModifiedProduct(productId: Int)
     suspend fun reduceProductQuantity(productId: Int)
     fun modifyProductForView(action: ProductModification): ProductDetailsView
-    suspend fun deleteProduct(productId: Int): ResultWrapper
+    suspend fun deleteProduct(productId: Int): ResultWrapper<Unit>
 }
 
 class ProductsService @Inject constructor(
@@ -28,13 +31,19 @@ class ProductsService @Inject constructor(
     private val addProductUseCase: IAddProductUseCase,
     private val updateProductUseCase: IUpdateProductUseCase,
     private val deleteProductUseCase: IDeleteProductUseCase,
+    private val connectionChecker: IConnectionChecker
 ): IProductsService {
 
     private lateinit var tempProductDetailsView: ProductDetailsView
 
-    override suspend fun getProducts(): List<ProductListView> {
-        return getProductsUseCase().map {
+    override suspend fun getProducts(): ResultWrapper<List<ProductListView>> {
+        val listProducts = getProductsUseCase().map {
             it.toListView()
+        }
+        return if(listProducts.isEmpty() && !connectionChecker.isOnline()){
+            ResultWrapper.Failure(errorMessage = StringWrapper.ResourceStringWrapper(id = R.string.no_internet_connection))
+        } else {
+            ResultWrapper.Success(listProducts)
         }
     }
 
@@ -62,8 +71,12 @@ class ProductsService @Inject constructor(
         addProductUseCase(product = productDomain)
     }
 
-    override suspend fun addProduct(product: ProductDomain) : ResultWrapper {
-        return addProductUseCase(product)
+    override suspend fun addProduct(product: ProductDomain) : ResultWrapper<Unit> {
+        return if(connectionChecker.isOnline()){
+            addProductUseCase(product)
+        } else {
+            ResultWrapper.Failure(errorMessage = StringWrapper.ResourceStringWrapper(id = R.string.no_internet_connection))
+        }
     }
 
     override suspend fun reduceProductQuantity(productId: Int) {
@@ -107,8 +120,12 @@ class ProductsService @Inject constructor(
         }
     }
 
-    override suspend fun deleteProduct(productId: Int): ResultWrapper {
-        return deleteProductUseCase(productId)
+    override suspend fun deleteProduct(productId: Int): ResultWrapper<Unit> {
+        return if(connectionChecker.isOnline()){
+            deleteProductUseCase(productId)
+        } else {
+            ResultWrapper.Failure(errorMessage = StringWrapper.ResourceStringWrapper(id = R.string.no_internet_connection))
+        }
     }
 
 }

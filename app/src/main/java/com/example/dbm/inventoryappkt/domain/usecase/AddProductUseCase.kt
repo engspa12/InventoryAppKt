@@ -9,17 +9,17 @@ import com.google.firebase.storage.StorageException
 import javax.inject.Inject
 
 interface IAddProductUseCase {
-    suspend operator fun invoke(product: ProductDomain): ResultWrapper
+    suspend operator fun invoke(product: ProductDomain): ResultWrapper<Unit>
 }
 
 class AddProductUseCase @Inject constructor(
     private val productsRepository: IProductsRepository
 ): IAddProductUseCase {
 
-    override suspend fun invoke(product: ProductDomain): ResultWrapper {
+    override suspend fun invoke(product: ProductDomain): ResultWrapper<Unit> {
         return when(val result = productsRepository.addProduct(product)){
             is ResultWrapper.Success -> {
-                ResultWrapper.Success
+                ResultWrapper.Success(Unit)
             }
             is ResultWrapper.Failure -> {
                 if(result.exception is StorageException){

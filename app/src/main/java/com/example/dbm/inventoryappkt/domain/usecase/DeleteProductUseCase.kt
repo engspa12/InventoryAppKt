@@ -8,17 +8,17 @@ import com.google.firebase.storage.StorageException
 import javax.inject.Inject
 
 interface IDeleteProductUseCase {
-    suspend operator fun invoke(productId: Int): ResultWrapper
+    suspend operator fun invoke(productId: Int): ResultWrapper<Unit>
 }
 
 class DeleteProductUseCase @Inject constructor(
     private val productsRepository: IProductsRepository
 ): IDeleteProductUseCase {
 
-    override suspend fun invoke(productId: Int): ResultWrapper {
+    override suspend fun invoke(productId: Int): ResultWrapper<Unit> {
         return when (val result = productsRepository.deleteProduct(productId)){
             is ResultWrapper.Success -> {
-                ResultWrapper.Success
+                ResultWrapper.Success(Unit)
             }
             is ResultWrapper.Failure -> {
                 if(result.exception is StorageException){

@@ -4,16 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.presentation.state.ProductDetailsState
-import com.example.dbm.inventoryappkt.presentation.util.ProductActionEvent
+import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsActionEvent
 import com.example.dbm.inventoryappkt.presentation.view.components.details.*
 import com.example.dbm.inventoryappkt.presentation.view.components.shared.*
 import com.example.dbm.inventoryappkt.presentation.viewmodel.ProductDetailsViewModel
@@ -27,7 +23,7 @@ fun ProductDetailsScreen(
     onProductSaved: () -> Unit,
     onProductDeleted: () -> Unit,
     onErrorOccurred: (String?) -> Unit,
-    onLoadingContent: (Boolean) -> Unit
+    onContentNotAvailable: (Boolean) -> Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsState()
@@ -43,13 +39,13 @@ fun ProductDetailsScreen(
 
         viewModel.productActionEvent.collect { event ->
             when(event) {
-                is ProductActionEvent.ProductUpdated -> {
+                is ProductDetailsActionEvent.ProductDetailsUpdated -> {
                     onProductSaved()
                 }
-                is ProductActionEvent.ProductDeleted -> {
+                is ProductDetailsActionEvent.ProductDetailsDeleted -> {
                     onProductDeleted()
                 }
-                is ProductActionEvent.Error -> {
+                is ProductDetailsActionEvent.Error -> {
                     val args = event.errorMessage.getStringArgs()
                     val errorMessage = context.getString(event.errorMessage.getStringIdResource() ?: 0, if(args.isNotEmpty()) args[0] else "")
                     onErrorOccurred(errorMessage)
@@ -60,7 +56,7 @@ fun ProductDetailsScreen(
 
     when(uiState) {
         is ProductDetailsState.Success -> {
-            onLoadingContent(false)
+            onContentNotAvailable(false)
             uiState.value?.let { productDetailsView ->
                 ProductDetailsContent(
                     item = productDetailsView,
@@ -98,21 +94,8 @@ fun ProductDetailsScreen(
                 )
             }
         }
-        is ProductDetailsState.Error -> {
-            onLoadingContent(false)
-            ErrorIndicator(
-                errorMessage = uiState.errorMessage.asString(),
-                color = MaterialTheme.colors.onPrimary,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.W600,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentHeight(Alignment.CenterVertically)
-                    .padding(horizontal = 20.dp)
-            )
-        }
         is ProductDetailsState.Loading -> {
-            onLoadingContent(true)
+            onContentNotAvailable(true)
             ProgressBar(
                 message = uiState.loadingMessage.asString(),
                 modifier = Modifier

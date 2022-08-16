@@ -67,6 +67,7 @@ fun ProductListItem(
                     dropOff = 0.65f,
                     tilt = 20f
                 ),
+                error = painterResource(id = R.drawable.no_image_available),
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds
             )

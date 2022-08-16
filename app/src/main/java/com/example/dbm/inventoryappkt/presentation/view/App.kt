@@ -1,6 +1,7 @@
 package com.example.dbm.inventoryappkt.presentation.view
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -29,7 +30,6 @@ import com.example.dbm.inventoryappkt.presentation.view.screens.ProductDetailsSc
 import com.example.dbm.inventoryappkt.presentation.viewmodel.AddNewProductViewModel
 import com.example.dbm.inventoryappkt.presentation.viewmodel.MainViewModel
 import com.example.dbm.inventoryappkt.presentation.viewmodel.ProductDetailsViewModel
-import com.example.dbm.inventoryappkt.util.StringWrapper
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -47,7 +47,7 @@ fun App(
     var navigationType by rememberSaveable { mutableStateOf(Constants.NavType.NAV_MAIN) }
     var saveProductDetails by remember { mutableStateOf(false) }
     var insertDummyProduct by remember { mutableStateOf(false) }
-    var loadingScreenContent by rememberSaveable { mutableStateOf(true) }
+    var screenContentAvailable by rememberSaveable { mutableStateOf(true) }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -83,11 +83,11 @@ fun App(
                 saveProductDetails = {
                     saveProductDetails = true
                 },
-                loadingScreenContent = loadingScreenContent
+                loadingScreenContent = screenContentAvailable
             )
         },
         floatingActionButton = {
-            if(!loadingScreenContent && navigationType == Constants.NavType.NAV_MAIN){
+            if(!screenContentAvailable && navigationType == Constants.NavType.NAV_MAIN){
                 FloatingActionButton(
                     onClick = {
                         navController.navigate(Screen.AddNewProductScreen.route)
@@ -114,6 +114,7 @@ fun App(
                     val mainViewModel = hiltViewModel<MainViewModel>()
 
                     MainScreen(
+                        context = context,
                         navigateToDetailsScreen = { productId ->
                             navController.navigate(Screen.ProductDetailsScreen.withArgs(productId))
                         },
@@ -122,8 +123,33 @@ fun App(
                         onDummyProductInserted = {
                             insertDummyProduct = false
                         },
-                        onLoadingContent = { loadingContent ->
-                            loadingScreenContent = loadingContent
+                        onErrorOccurred = { errorMessage ->
+                            keyboardController?.hide()
+                            insertDummyProduct = false
+                            if(errorMessage != null){
+                                coroutineScope.launch {
+
+                                    scaffoldState.snackbarHostState
+                                        .currentSnackbarData?.dismiss()
+
+                                    val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                                        message = errorMessage,
+                                        actionLabel = context.getString(R.string.dismiss_snackbar),
+                                        duration = SnackbarDuration.Indefinite
+                                    )
+
+                                    when(snackbarResult) {
+                                        SnackbarResult.ActionPerformed -> {
+                                            scaffoldState.snackbarHostState
+                                                .currentSnackbarData?.dismiss()
+                                        }
+                                        else -> {}
+                                    }
+                                }
+                            }
+                        },
+                        onContentNotAvailable = { contentAvailable ->
+                            screenContentAvailable = contentAvailable
                         }
                     )
                 }
@@ -160,14 +186,18 @@ fun App(
                             saveProductDetails = false
                             if(errorMessage != null){
                                 coroutineScope.launch {
+
+                                    scaffoldState.snackbarHostState
+                                        .currentSnackbarData?.dismiss()
+
                                     scaffoldState.snackbarHostState.showSnackbar(
                                         errorMessage
                                     )
                                 }
                             }
                         },
-                        onLoadingContent = { loadingContent ->
-                            loadingScreenContent = loadingContent
+                        onContentNotAvailable = { contentAvailable ->
+                            screenContentAvailable = contentAvailable
                         }
                     )
                 }
@@ -193,14 +223,18 @@ fun App(
                             saveProductDetails = false
                             if(errorMessage != null){
                                 coroutineScope.launch {
+
+                                    scaffoldState.snackbarHostState
+                                        .currentSnackbarData?.dismiss()
+
                                     scaffoldState.snackbarHostState.showSnackbar(
                                         errorMessage
                                     )
                                 }
                             }
                         },
-                        onLoadingContent = { loadingContent ->
-                            loadingScreenContent = loadingContent
+                        onContentNotAvailable = { contentAvailable ->
+                            screenContentAvailable = contentAvailable
                         }
                     )
                 }

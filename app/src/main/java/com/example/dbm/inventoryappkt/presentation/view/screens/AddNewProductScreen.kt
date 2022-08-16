@@ -27,11 +27,11 @@ fun AddNewProductScreen(
     addNewProduct: Boolean,
     onProductSaved: () -> Unit,
     onErrorOccurred: (String?) -> Unit,
-    onLoadingContent: (Boolean) -> Unit
+    onContentNotAvailable: (Boolean) -> Unit
 ) {
 
     val inputState = viewModel.uiState
-    val progressBarMessage by viewModel.progressBar.collectAsState()
+    val progressBarMessage by viewModel.progressBarMessage.collectAsState()
     var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     val launcher =
@@ -80,7 +80,7 @@ fun AddNewProductScreen(
     }
 
     if (progressBarMessage == null) {
-        onLoadingContent(false)
+        onContentNotAvailable(false)
         AddNewProductContent(
             bitmap = bitmap,
             inputState = inputState,
@@ -92,7 +92,7 @@ fun AddNewProductScreen(
             }
         )
     } else {
-        onLoadingContent(true)
+        onContentNotAvailable(true)
         progressBarMessage?.asString()?.let {
             ProgressBar(
                 message = it,

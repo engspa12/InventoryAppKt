@@ -6,6 +6,8 @@ import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
 import com.example.dbm.inventoryappkt.presentation.state.MainState
+import com.example.dbm.inventoryappkt.presentation.util.MainEvent
+import com.example.dbm.inventoryappkt.util.ResultWrapper
 import com.example.dbm.inventoryappkt.util.StringWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -26,13 +28,19 @@ class MainViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<MainState>(MainState.Loading(StringWrapper.ResourceStringWrapper(id = R.string.loading_products)))
     val uiState: StateFlow<MainState> = _uiState
 
-    private val _listIsFull = Channel<Boolean>()
-    val listIsFulls = _listIsFull.receiveAsFlow()
+    private val _mainEvent = Channel<MainEvent>()
+    val mainEvent = _mainEvent.receiveAsFlow()
 
     fun getProducts() {
         viewModelScope.launch(mainDispatcher) {
-            val products = productsService.getProducts()
-            _uiState.value = MainState.Success(products)
+            when(val result = productsService.getProducts()){
+                is ResultWrapper.Success -> {
+                    _uiState.value = MainState.Success(result.value)
+                }
+                is ResultWrapper.Failure -> {
+                    _mainEvent.send(MainEvent.Error(result.errorMessage))
+                }
+            }
         }
     }
 
@@ -53,20 +61,27 @@ class MainViewModel @Inject constructor(
         showProgressBar(R.string.loading_deleting_product)
 
         viewModelScope.launch(mainDispatcher) {
-            productsService.deleteProduct(productId)
-            delay(600L)
+            when(val result = productsService.deleteProduct(productId)) {
+                is ResultWrapper.Success -> {
+                    delay(600L)
+                }
+                is ResultWrapper.Failure -> {
+                    delay(600L)
+                    _mainEvent.send(MainEvent.Error(result.errorMessage))
+                }
+            }
             getProducts()
         }
     }
 
     fun insertDummyProduct() {
 
-        showProgressBar(R.string.loading_adding_product)
+        showProgressBar(R.string.loading_adding_dummy_product)
 
         viewModelScope.launch(mainDispatcher) {
             productsService.insertDummyProduct()
             delay(600L)
-            _listIsFull.send(true)
+            _mainEvent.send(MainEvent.ListChanged(listHasItems = true))
             getProducts()
         }
     }

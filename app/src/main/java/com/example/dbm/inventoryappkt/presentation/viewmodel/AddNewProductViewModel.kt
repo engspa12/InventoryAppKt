@@ -10,7 +10,6 @@ import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
 import com.example.dbm.inventoryappkt.domain.service.IUserService
 import com.example.dbm.inventoryappkt.domain.service.IValidationService
-import com.example.dbm.inventoryappkt.presentation.state.MainState
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
 import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
 import com.example.dbm.inventoryappkt.presentation.util.ValidationEvent
@@ -36,11 +35,11 @@ class AddNewProductViewModel @Inject constructor(
     var uiState by mutableStateOf(ProductInputState())
         private set
 
-    private val _progressBar = MutableStateFlow<StringWrapper?>(null)
-    val progressBar: StateFlow<StringWrapper?> = _progressBar
+    private val _progressBarMessage = MutableStateFlow<StringWrapper?>(null)
+    val progressBarMessage: StateFlow<StringWrapper?> = _progressBarMessage
 
-    private val validationEventChannel = Channel<ValidationEvent>()
-    val validationEvent = validationEventChannel.receiveAsFlow()
+    private val _validationEvent = Channel<ValidationEvent>()
+    val validationEvent = _validationEvent.receiveAsFlow()
 
     fun onEvent(event: ProductDetailsChangeEvent) {
         when(event) {
@@ -78,11 +77,11 @@ class AddNewProductViewModel @Inject constructor(
     }
 
     private fun showProgressBar(){
-        _progressBar.value = StringWrapper.ResourceStringWrapper(id = R.string.loading_adding_product)
+        _progressBarMessage.value = StringWrapper.ResourceStringWrapper(id = R.string.loading_adding_product)
     }
 
     private fun hideProgressBar(){
-        _progressBar.value = null
+        _progressBarMessage.value = null
     }
 
     fun addNewProduct() {
@@ -97,14 +96,14 @@ class AddNewProductViewModel @Inject constructor(
                         if(userId != null && userId != ""){
                             when(val resultAddition = productsService.addProduct(result.productDomain)) {
                                 is ResultWrapper.Success -> {
-                                    validationEventChannel.send(ValidationEvent.Success)
+                                    _validationEvent.send(ValidationEvent.Success)
                                 }
                                 is ResultWrapper.Failure -> {
-                                    validationEventChannel.send(ValidationEvent.Failure(errorMessage = resultAddition.errorMessage))
+                                    _validationEvent.send(ValidationEvent.Failure(errorMessage = resultAddition.errorMessage))
                                 }
                             }
                         } else {
-                            validationEventChannel.send(ValidationEvent.Failure(StringWrapper.ResourceStringWrapper(id = R.string.user_not_authenticated)))
+                            _validationEvent.send(ValidationEvent.Failure(StringWrapper.ResourceStringWrapper(id = R.string.user_not_authenticated)))
                         }
 
                         hideProgressBar()
@@ -113,7 +112,7 @@ class AddNewProductViewModel @Inject constructor(
             }
         } else {
             viewModelScope.launch(mainDispatcher) {
-                validationEventChannel.send(ValidationEvent.Failure(result.errorMessage))
+                _validationEvent.send(ValidationEvent.Failure(result.errorMessage))
             }
         }
     }
