@@ -48,6 +48,17 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun deleteProduct(productId: Int) {
+
+        showProgressBar(R.string.loading_deleting_product)
+
+        viewModelScope.launch(mainDispatcher) {
+            productsService.deleteProduct(productId)
+            delay(600L)
+            getProducts()
+        }
+    }
+
     fun insertDummyProduct() {
 
         showProgressBar(R.string.loading_adding_product)

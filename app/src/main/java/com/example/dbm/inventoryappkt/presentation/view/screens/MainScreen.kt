@@ -58,6 +58,9 @@ fun MainScreen(
                 },
                 onItemNewSale = { productId ->
                     viewModel.updateProductQuantity(productId)
+                },
+                onItemSwiped = { productId ->
+                    viewModel.deleteProduct(productId)
                 }
             )
         }

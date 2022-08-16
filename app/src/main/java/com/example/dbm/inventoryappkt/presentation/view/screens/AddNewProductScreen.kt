@@ -57,14 +57,12 @@ fun AddNewProductScreen(
 
     if (addNewProduct) {
         LaunchedEffect(key1 = Unit) {
-            onLoadingContent(true)
             viewModel.addNewProduct()
         }
     }
 
     LaunchedEffect(key1 = Unit) {
         viewModel.validationEvent.collect { event ->
-            onLoadingContent(false)
             when (event) {
                 is ValidationEvent.Success -> {
                     onProductSaved()
@@ -82,6 +80,7 @@ fun AddNewProductScreen(
     }
 
     if (progressBarMessage == null) {
+        onLoadingContent(false)
         AddNewProductContent(
             bitmap = bitmap,
             inputState = inputState,
@@ -93,6 +92,7 @@ fun AddNewProductScreen(
             }
         )
     } else {
+        onLoadingContent(true)
         progressBarMessage?.asString()?.let {
             ProgressBar(
                 message = it,
