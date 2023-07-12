@@ -4,8 +4,6 @@
 
 #### InventoryAppKt brings together several Android Architecture Components such as Room, Navigation and ViewModels.
 
-</br>
-
 <img src="https://images2.imgbox.com/99/a3/mmsDU0Cs_o.png" width="375" height="725"><img height="725" hspace="20"/><img src="https://images2.imgbox.com/0a/9e/bsHasAOm_o.png" width="375" height="725">
 <img width="770" vspace="20"/>
 <img src="https://images2.imgbox.com/91/ae/VhudpOGb_o.png" width="375" height="725"><img height="725" hspace="20"/><img src="https://images2.imgbox.com/04/52/Cyus9oZA_o.png" width="375" height="725">
