@@ -14,8 +14,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
 import com.example.dbm.inventoryappkt.presentation.util.ValidationEvent
+import com.example.dbm.inventoryappkt.presentation.util.mapToStringResource
 import com.example.dbm.inventoryappkt.presentation.view.components.add.AddNewProductContent
 import com.example.dbm.inventoryappkt.presentation.view.components.shared.ProgressBar
 import com.example.dbm.inventoryappkt.presentation.viewmodel.AddNewProductViewModel
@@ -31,7 +33,7 @@ fun AddNewProductScreen(
 ) {
 
     val inputState = viewModel.uiState
-    val progressBarMessage by viewModel.progressBarMessage.collectAsState()
+    val progressBarMessage by viewModel.progressBarMessage.collectAsStateWithLifecycle()
     var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     val launcher =
@@ -68,11 +70,7 @@ fun AddNewProductScreen(
                     onProductSaved()
                 }
                 is ValidationEvent.Failure -> {
-                    val args = event.errorMessage?.getStringArgs()
-                    val errorMessage = context.getString(
-                        event.errorMessage?.getStringIdResource() ?: 0,
-                        if (args != null && args.isNotEmpty()) args[0] else ""
-                    )
+                    val errorMessage = event.mapToStringResource(context)
                     onErrorOccurred(errorMessage)
                 }
             }

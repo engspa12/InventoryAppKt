@@ -4,7 +4,7 @@ import com.example.dbm.inventoryappkt.util.StringWrapper
 
 sealed class ValidationEvent {
     object Success: ValidationEvent()
-    data class Failure(val errorMessage: StringWrapper? = null) : ValidationEvent()
+    data class Failure(val errorType: ValidationEventError) : ValidationEvent()
 }
 
 sealed class ProductDetailsChangeEvent {
@@ -23,10 +23,15 @@ sealed class ProductDetailsChangeEvent {
 sealed class ProductDetailsActionEvent {
     object ProductDetailsUpdated: ProductDetailsActionEvent()
     object ProductDetailsDeleted: ProductDetailsActionEvent()
-    data class Error(val errorMessage: StringWrapper): ProductDetailsActionEvent()
+    object NoConnectionError: ProductDetailsActionEvent()
+    object NoAuthenticatedError: ProductDetailsActionEvent()
+    object DeletingFromStorageError: ProductDetailsActionEvent()
+    object GenericError: ProductDetailsActionEvent()
 }
 
 sealed class MainEvent {
     data class ListChanged(val listHasItems: Boolean): MainEvent()
-    data class Error(val errorMessage: StringWrapper): MainEvent()
+    object GenericError: MainEvent()
+    object NoConnectionError: MainEvent()
+    object DeletingFromStorageError: MainEvent()
 }

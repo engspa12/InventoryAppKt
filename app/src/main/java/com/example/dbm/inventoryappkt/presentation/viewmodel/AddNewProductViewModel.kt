@@ -10,9 +10,12 @@ import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
 import com.example.dbm.inventoryappkt.domain.service.IUserService
 import com.example.dbm.inventoryappkt.domain.service.IValidationService
+import com.example.dbm.inventoryappkt.domain.util.ProductDomainError
+import com.example.dbm.inventoryappkt.domain.util.ProductValidationError
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
 import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
 import com.example.dbm.inventoryappkt.presentation.util.ValidationEvent
+import com.example.dbm.inventoryappkt.presentation.util.ValidationEventError
 import com.example.dbm.inventoryappkt.util.ResultWrapper
 import com.example.dbm.inventoryappkt.util.StringWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -93,17 +96,17 @@ class AddNewProductViewModel @Inject constructor(
 
                 viewModelScope.launch(mainDispatcher) {
                     userService.getUserId().collect { userId ->
-                        if(userId != null && userId != ""){
+                        if(!userId.isNullOrEmpty()){
                             when(val resultAddition = productsService.addProduct(result.productDomain)) {
                                 is ResultWrapper.Success -> {
                                     _validationEvent.send(ValidationEvent.Success)
                                 }
                                 is ResultWrapper.Failure -> {
-                                    _validationEvent.send(ValidationEvent.Failure(errorMessage = resultAddition.errorMessage))
+                                    processDomainError(resultAddition.error)
                                 }
                             }
                         } else {
-                            _validationEvent.send(ValidationEvent.Failure(StringWrapper.ResourceStringWrapper(id = R.string.user_not_authenticated)))
+                            _validationEvent.send(ValidationEvent.Failure(errorType = ValidationEventError.USER_NOT_AUTHENTICATED))
                         }
 
                         hideProgressBar()
@@ -112,9 +115,49 @@ class AddNewProductViewModel @Inject constructor(
             }
         } else {
             viewModelScope.launch(mainDispatcher) {
-                _validationEvent.send(ValidationEvent.Failure(result.errorMessage))
+                processValidationError(result.errorType)
             }
         }
+    }
+
+    private suspend fun processDomainError(error: ProductDomainError?){
+        _validationEvent.send(
+            ValidationEvent.Failure(errorType = when(error) {
+                    ProductDomainError.NO_INTERNET_CONNECTION -> ValidationEventError.NO_INTERNET_CONNECTION
+                    ProductDomainError.GENERIC -> ValidationEventError.GENERIC
+                    ProductDomainError.UPLOADING_TO_STORAGE_SERVICE -> ValidationEventError.UPLOADING_TO_STORAGE_SERVICE
+                    ProductDomainError.DELETING_FROM_STORAGE_SERVICE -> ValidationEventError.DELETING_FROM_STORAGE_SERVICE
+                    else -> ValidationEventError.GENERIC
+                }
+            )
+        )
+    }
+
+    private suspend fun processValidationError(error: ProductValidationError) {
+        _validationEvent.send(
+            ValidationEvent.Failure(errorType = when(error) {
+                    ProductValidationError.MUST_SELECT_IMAGE_FOR_PRODUCT -> ValidationEventError.MUST_SELECT_IMAGE_FOR_PRODUCT
+                    ProductValidationError.TYPE_CANNOT_BE_EMPTY -> ValidationEventError.TYPE_CANNOT_BE_EMPTY
+                    ProductValidationError.STOCK_STATUS_CANNOT_BE_EMPTY -> ValidationEventError.STOCK_STATUS_CANNOT_BE_EMPTY
+                    ProductValidationError.QUANTITY_MUST_BE_WHOLE_NUMBER -> ValidationEventError.QUANTITY_MUST_BE_WHOLE_NUMBER
+                    ProductValidationError.QUANTITY_CANNOT_BE_NEGATIVE -> ValidationEventError.QUANTITY_CANNOT_BE_NEGATIVE
+                    ProductValidationError.WEIGHT_MUST_BE_DECIMAL_NUMBER -> ValidationEventError.WEIGHT_MUST_BE_DECIMAL_NUMBER
+                    ProductValidationError.WEIGHT_CANNOT_BE_NEGATIVE-> ValidationEventError.WEIGHT_CANNOT_BE_NEGATIVE
+                    ProductValidationError.WARRANTY_MUST_BE_WHOLE_NUMBER -> ValidationEventError.WARRANTY_MUST_BE_WHOLE_NUMBER
+                    ProductValidationError.WARRANTY_CANNOT_BE_NEGATIVE -> ValidationEventError.WARRANTY_CANNOT_BE_NEGATIVE
+                    ProductValidationError.BRAND_CANNOT_BE_EMPTY -> ValidationEventError.BRAND_CANNOT_BE_EMPTY
+                    ProductValidationError.BRAND_CANNOT_BE_LESS_THAN_THREE_CHARACTERS -> ValidationEventError.BRAND_CANNOT_BE_LESS_THAN_THREE_CHARACTERS
+                    ProductValidationError.PRICE_MUST_BE_DECIMAL_NUMBER -> ValidationEventError.PRICE_MUST_BE_DECIMAL_NUMBER
+                    ProductValidationError.PRICE_CANNOT_BE_NEGATIVE -> ValidationEventError.PRICE_CANNOT_BE_NEGATIVE
+                    ProductValidationError.MANUFACTURE_YEAR_MUST_BE_WHOLE_NUMBER -> ValidationEventError.MANUFACTURE_YEAR_MUST_BE_WHOLE_NUMBER
+                    ProductValidationError.MANUFACTURE_YEAR_MUST_HAVE_FOUR_DIGITS -> ValidationEventError.MANUFACTURE_YEAR_MUST_HAVE_FOUR_DIGITS
+                    ProductValidationError.MANUFACTURE_YEAR_OUT_OF_RANGE -> ValidationEventError.MANUFACTURE_YEAR_OUT_OF_RANGE
+                    ProductValidationError.NAME_CANNOT_BE_EMPTY -> ValidationEventError.NAME_CANNOT_BE_EMPTY
+                    ProductValidationError.NAME_CANNOT_BE_LESS_THAN_THREE_CHARACTERS -> ValidationEventError.NAME_CANNOT_BE_LESS_THAN_THREE_CHARACTERS
+                    else -> ValidationEventError.GENERIC
+                }
+            )
+        )
     }
 
 

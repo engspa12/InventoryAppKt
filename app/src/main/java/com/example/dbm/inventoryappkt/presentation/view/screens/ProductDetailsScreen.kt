@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.presentation.state.ProductDetailsState
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsActionEvent
+import com.example.dbm.inventoryappkt.presentation.util.mapToStringResource
 import com.example.dbm.inventoryappkt.presentation.view.components.details.*
 import com.example.dbm.inventoryappkt.presentation.view.components.shared.*
 import com.example.dbm.inventoryappkt.presentation.viewmodel.ProductDetailsViewModel
@@ -26,7 +28,7 @@ fun ProductDetailsScreen(
     onContentNotAvailable: (Boolean) -> Unit
 ) {
 
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     if(saveProductDetails) {
         LaunchedEffect(key1 = Unit) {
@@ -45,9 +47,9 @@ fun ProductDetailsScreen(
                 is ProductDetailsActionEvent.ProductDetailsDeleted -> {
                     onProductDeleted()
                 }
-                is ProductDetailsActionEvent.Error -> {
-                    val args = event.errorMessage.getStringArgs()
-                    val errorMessage = context.getString(event.errorMessage.getStringIdResource() ?: 0, if(args.isNotEmpty()) args[0] else "")
+                is ProductDetailsActionEvent.GenericError, ProductDetailsActionEvent.DeletingFromStorageError,
+                ProductDetailsActionEvent.NoConnectionError, ProductDetailsActionEvent.NoAuthenticatedError -> {
+                    val errorMessage = context.getString(event.mapToStringResource())
                     onErrorOccurred(errorMessage)
                 }
             }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
+import com.example.dbm.inventoryappkt.domain.util.ProductDomainError
 import com.example.dbm.inventoryappkt.presentation.state.MainState
 import com.example.dbm.inventoryappkt.presentation.util.MainEvent
 import com.example.dbm.inventoryappkt.util.ResultWrapper
@@ -38,7 +39,7 @@ class MainViewModel @Inject constructor(
                     _uiState.value = MainState.Success(result.value)
                 }
                 is ResultWrapper.Failure -> {
-                    _mainEvent.send(MainEvent.Error(result.errorMessage))
+                    processErrorResponse(result.error)
                 }
             }
         }
@@ -67,11 +68,22 @@ class MainViewModel @Inject constructor(
                 }
                 is ResultWrapper.Failure -> {
                     delay(600L)
-                    _mainEvent.send(MainEvent.Error(result.errorMessage))
+                    processErrorResponse(result.error)
                 }
             }
             getProducts()
         }
+    }
+
+    private suspend fun processErrorResponse(error: ProductDomainError?){
+        _mainEvent.send(
+            when(error){
+                ProductDomainError.GENERIC -> MainEvent.GenericError
+                ProductDomainError.NO_INTERNET_CONNECTION -> MainEvent.NoConnectionError
+                ProductDomainError.DELETING_FROM_STORAGE_SERVICE -> MainEvent.DeletingFromStorageError
+                else -> MainEvent.GenericError
+            }
+        )
     }
 
     fun insertDummyProduct() {

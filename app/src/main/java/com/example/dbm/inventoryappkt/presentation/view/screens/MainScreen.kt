@@ -6,12 +6,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.dbm.inventoryappkt.presentation.state.MainState
 import com.example.dbm.inventoryappkt.presentation.util.MainEvent
+import com.example.dbm.inventoryappkt.presentation.util.mapToStringResource
 import com.example.dbm.inventoryappkt.presentation.view.components.main.ProductsList
 import com.example.dbm.inventoryappkt.presentation.view.components.shared.ProgressBar
 import com.example.dbm.inventoryappkt.presentation.viewmodel.MainViewModel
@@ -26,7 +27,7 @@ fun MainScreen(
     onErrorOccurred: (String?) -> Unit,
     onContentNotAvailable: (Boolean) -> Unit
 ){
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lazyListState = rememberLazyListState()
 
     if(insertDummyProduct) {
@@ -45,9 +46,8 @@ fun MainScreen(
                         onDummyProductInserted()
                     }
                 }
-                is MainEvent.Error -> {
-                    val args = event.errorMessage.getStringArgs()
-                    val errorMessage = context.getString(event.errorMessage.getStringIdResource() ?: 0, if(args.isNotEmpty()) args[0] else "")
+                is MainEvent.GenericError, MainEvent.NoConnectionError, MainEvent.DeletingFromStorageError -> {
+                    val errorMessage = context.getString(event.mapToStringResource())
                     onErrorOccurred(errorMessage)
                 }
             }

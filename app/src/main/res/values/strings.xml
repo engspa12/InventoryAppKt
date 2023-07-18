@@ -77,6 +77,7 @@
     <string name="error_upload_firebase">An error occurred while uploading to the Storage service</string>
     <string name="error_deletion_firebase">An error occurred while deleting from the Storage service</string>
     <string name="error_unknown_firebase">An error occurred with the next message: %1$s</string>
+    <string name="error_unknown">An error occurred, please try again later</string>
     <string name="no_internet_connection">There is no Internet connection</string>
     <string name="dismiss_snackbar">Dismiss</string>
 </resources>

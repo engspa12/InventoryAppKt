@@ -6,6 +6,7 @@ import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
 import com.example.dbm.inventoryappkt.domain.service.IUserService
+import com.example.dbm.inventoryappkt.domain.util.ProductDomainError
 import com.example.dbm.inventoryappkt.domain.util.ProductModification
 import com.example.dbm.inventoryappkt.presentation.state.ProductDetailsState
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsActionEvent
@@ -45,22 +46,33 @@ class ProductDetailsViewModel @Inject constructor(
         showProgressBar(R.string.loading_deleting_product)
         viewModelScope.launch(mainDispatcher) {
             userService.getUserId().collect { userId ->
-                if(userId != null && userId != "") {
+                if(!userId.isNullOrEmpty()) {
                     when(val resultDeletion = productsService.deleteProduct(productId)){
                         is ResultWrapper.Success -> {
                             _productDetailsActionEvent.send(ProductDetailsActionEvent.ProductDetailsDeleted)
                         }
                         is ResultWrapper.Failure -> {
-                            _productDetailsActionEvent.send(ProductDetailsActionEvent.Error(errorMessage = resultDeletion.errorMessage))
+                            processDomainError(resultDeletion.error)
                             delay(200L)
                             getProductDetails(productId)
                         }
                     }
                 } else {
-                    _productDetailsActionEvent.send(ProductDetailsActionEvent.Error(StringWrapper.ResourceStringWrapper(id = R.string.user_not_authenticated)))
+                    _productDetailsActionEvent.send(ProductDetailsActionEvent.NoAuthenticatedError)
                 }
             }
         }
+    }
+
+    private suspend fun processDomainError(error: ProductDomainError?) {
+        _productDetailsActionEvent.send(
+            when(error){
+                ProductDomainError.DELETING_FROM_STORAGE_SERVICE -> ProductDetailsActionEvent.DeletingFromStorageError
+                ProductDomainError.GENERIC -> ProductDetailsActionEvent.GenericError
+                ProductDomainError.NO_INTERNET_CONNECTION -> ProductDetailsActionEvent.NoConnectionError
+                else -> ProductDetailsActionEvent.GenericError
+            }
+        )
     }
 
     fun updateProduct(productId: Int){
