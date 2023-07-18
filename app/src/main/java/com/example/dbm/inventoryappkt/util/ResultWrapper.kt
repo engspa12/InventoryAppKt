@@ -1,6 +1,6 @@
 package com.example.dbm.inventoryappkt.util
 
-sealed class ResultWrapper<T> {
-    data class Success<T>(val value: T): ResultWrapper<T>()
-    data class Failure<T>(val exception: Exception? = null, val errorMessage: StringWrapper = StringWrapper.SimpleStringWrapper("")): ResultWrapper<T>()
+sealed class ResultWrapper<out T,out U> {
+    data class Success<T>(val value: T): ResultWrapper<T, Nothing>()
+    data class Failure<U>(val error: U? = null, val exception: Exception? = null): ResultWrapper<Nothing, U>()
 }
