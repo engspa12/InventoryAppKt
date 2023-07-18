@@ -1,8 +1,12 @@
 package com.example.dbm.inventoryappkt.domain.service
 
-import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.domain.model.ProductDomain
-import com.example.dbm.inventoryappkt.domain.usecase.*
+import com.example.dbm.inventoryappkt.domain.usecase.IAddProductUseCase
+import com.example.dbm.inventoryappkt.domain.usecase.IDeleteProductUseCase
+import com.example.dbm.inventoryappkt.domain.usecase.IGetProductByIdUseCase
+import com.example.dbm.inventoryappkt.domain.usecase.IGetProductsUseCase
+import com.example.dbm.inventoryappkt.domain.usecase.IUpdateProductUseCase
+import com.example.dbm.inventoryappkt.domain.util.ProductDomainError
 import com.example.dbm.inventoryappkt.domain.util.ProductModification
 import com.example.dbm.inventoryappkt.domain.util.toDetailsView
 import com.example.dbm.inventoryappkt.domain.util.toListView
@@ -11,18 +15,17 @@ import com.example.dbm.inventoryappkt.presentation.model.ProductDetailsView
 import com.example.dbm.inventoryappkt.presentation.model.ProductListView
 import com.example.dbm.inventoryappkt.util.IConnectionChecker
 import com.example.dbm.inventoryappkt.util.ResultWrapper
-import com.example.dbm.inventoryappkt.util.StringWrapper
 import javax.inject.Inject
 
 interface IProductsService {
-    suspend fun getProducts(): ResultWrapper<List<ProductListView>>
+    suspend fun getProducts(): ResultWrapper<List<ProductListView>, ProductDomainError>
     suspend fun getProductDetails(productId: Int): ProductDetailsView
     suspend fun insertDummyProduct()
-    suspend fun addProduct(product: ProductDomain): ResultWrapper<Unit>
+    suspend fun addProduct(product: ProductDomain): ResultWrapper<Unit, ProductDomainError>
     suspend fun saveModifiedProduct(productId: Int)
     suspend fun reduceProductQuantity(productId: Int)
     fun modifyProductForView(action: ProductModification): ProductDetailsView
-    suspend fun deleteProduct(productId: Int): ResultWrapper<Unit>
+    suspend fun deleteProduct(productId: Int): ResultWrapper<Unit, ProductDomainError>
 }
 
 class ProductsService @Inject constructor(
@@ -36,12 +39,12 @@ class ProductsService @Inject constructor(
 
     private lateinit var tempProductDetailsView: ProductDetailsView
 
-    override suspend fun getProducts(): ResultWrapper<List<ProductListView>> {
+    override suspend fun getProducts(): ResultWrapper<List<ProductListView>, ProductDomainError> {
         val listProducts = getProductsUseCase().map {
             it.toListView()
         }
         return if(listProducts.isEmpty() && !connectionChecker.isOnline()){
-            ResultWrapper.Failure(errorMessage = StringWrapper.ResourceStringWrapper(id = R.string.no_internet_connection))
+            ResultWrapper.Failure(error = ProductDomainError.NO_INTERNET_CONNECTION)
         } else {
             ResultWrapper.Success(listProducts)
         }
@@ -71,11 +74,11 @@ class ProductsService @Inject constructor(
         addProductUseCase(product = productDomain)
     }
 
-    override suspend fun addProduct(product: ProductDomain) : ResultWrapper<Unit> {
+    override suspend fun addProduct(product: ProductDomain) : ResultWrapper<Unit, ProductDomainError> {
         return if(connectionChecker.isOnline()){
             addProductUseCase(product)
         } else {
-            ResultWrapper.Failure(errorMessage = StringWrapper.ResourceStringWrapper(id = R.string.no_internet_connection))
+            ResultWrapper.Failure(error = ProductDomainError.NO_INTERNET_CONNECTION)
         }
     }
 
@@ -120,11 +123,11 @@ class ProductsService @Inject constructor(
         }
     }
 
-    override suspend fun deleteProduct(productId: Int): ResultWrapper<Unit> {
+    override suspend fun deleteProduct(productId: Int): ResultWrapper<Unit, ProductDomainError> {
         return if(connectionChecker.isOnline()){
             deleteProductUseCase(productId)
         } else {
-            ResultWrapper.Failure(errorMessage = StringWrapper.ResourceStringWrapper(id = R.string.no_internet_connection))
+            ResultWrapper.Failure(error = ProductDomainError.NO_INTERNET_CONNECTION)
         }
     }
 

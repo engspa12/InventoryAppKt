@@ -18,15 +18,13 @@ class UserService @Inject constructor(
 ): IUserService {
 
     override suspend fun setUserId(user: FirebaseUser?) {
-        val userId = user?.uid ?: ""
+        val userId = user?.uid.orEmpty()
         setUserUseCase(userId)
     }
 
     override suspend fun getUserId(): Flow<String?> {
         return getUserUseCase().map { userId ->
-            if(userId != ""){
-                userId
-            } else {
+            userId.ifEmpty {
                 null
             }
         }

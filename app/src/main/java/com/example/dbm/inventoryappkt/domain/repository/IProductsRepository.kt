@@ -7,7 +7,7 @@ interface IProductsRepository {
 
     suspend fun getProducts(): List<ProductDomain>
     suspend fun getProductById(productId: Int): ProductDomain
-    suspend fun addProduct(productDomain: ProductDomain): ResultWrapper<Unit>
+    suspend fun addProduct(productDomain: ProductDomain): ResultWrapper<Unit, Nothing>
     suspend fun updateProduct(productDomain: ProductDomain)
-    suspend fun deleteProduct(productId: Int): ResultWrapper<Unit>
+    suspend fun deleteProduct(productId: Int): ResultWrapper<Unit, Nothing>
 }

@@ -1,11 +1,10 @@
 package com.example.dbm.inventoryappkt.domain.service
 
-import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.domain.model.ProductDomain
+import com.example.dbm.inventoryappkt.domain.util.ProductValidationError
 import com.example.dbm.inventoryappkt.domain.util.ProductValidationResult
 import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
-import com.example.dbm.inventoryappkt.util.StringWrapper
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 interface IValidationService {
@@ -30,80 +29,80 @@ class ValidationService @Inject constructor() : IValidationService {
         if(!imageUrlStorageLocationValidationResult.first) {
             return ProductValidationResult(
                 productDomain = null,
-                validationSuccessful = imageUrlStorageLocationValidationResult.first,
-                errorMessage = imageUrlStorageLocationValidationResult.second
+                validationSuccessful = false,
+                errorType = imageUrlStorageLocationValidationResult.second
             )
         }
 
         if(!nameValidationResult.first){
             return ProductValidationResult(
                 productDomain = null,
-                validationSuccessful = nameValidationResult.first,
-                errorMessage = nameValidationResult.second
+                validationSuccessful = false,
+                errorType = nameValidationResult.second
             )
         }
 
         if(!priceValidationResult.first){
             return ProductValidationResult(
                 productDomain = null,
-                validationSuccessful = priceValidationResult.first,
-                errorMessage = priceValidationResult.second
+                validationSuccessful = false,
+                errorType = priceValidationResult.second
             )
         }
 
         if(!quantityValidationResult.first) {
             return ProductValidationResult(
                 productDomain = null,
-                validationSuccessful = quantityValidationResult.first,
-                errorMessage = quantityValidationResult.second
+                validationSuccessful = false,
+                errorType = quantityValidationResult.second
             )
         }
 
         if(!brandValidationResult.first) {
             return ProductValidationResult(
                 productDomain = null,
-                validationSuccessful = brandValidationResult.first,
-                errorMessage = brandValidationResult.second
+                validationSuccessful = false,
+                errorType = brandValidationResult.second
             )
         }
 
         if(!weightValidationResult.first){
             return ProductValidationResult(
                 productDomain = null,
-                validationSuccessful = weightValidationResult.first,
-                errorMessage = weightValidationResult.second
+                validationSuccessful = false,
+                errorType = weightValidationResult.second
             )
         }
 
         if(!typeValidationResult.first){
             return ProductValidationResult(
                 productDomain = null,
-                validationSuccessful = typeValidationResult.first,
-                errorMessage = typeValidationResult.second
+                validationSuccessful = false,
+                errorType = typeValidationResult.second
             )
         }
 
         if(!stockStatusValidationResult.first){
             return ProductValidationResult(
                 productDomain = null,
-                validationSuccessful = stockStatusValidationResult.first,
-                errorMessage = stockStatusValidationResult.second
+                validationSuccessful = false,
+                errorType = stockStatusValidationResult.second
             )
         }
 
         if(!warrantyValidationResult.first) {
             return ProductValidationResult(
                 productDomain = null,
-                validationSuccessful = warrantyValidationResult.first,
-                errorMessage = warrantyValidationResult.second
+                validationSuccessful = false,
+                errorType = warrantyValidationResult.second
             )
         }
 
         if(!manufactureYearValidationResult.first){
             return ProductValidationResult(
                 productDomain = null,
-                validationSuccessful = manufactureYearValidationResult.first,
-                errorMessage = manufactureYearValidationResult.second
+                validationSuccessful = false,
+                errorType = manufactureYearValidationResult.second
             )
         }
 
@@ -125,44 +124,44 @@ class ValidationService @Inject constructor() : IValidationService {
         return ProductValidationResult(
             productDomain = productDomain,
             validationSuccessful = true,
-            errorMessage = null)
+            errorType = ProductValidationError.NONE)
     }
 
-    private fun isImageUriValid(productImageUri: String): Pair<Boolean, StringWrapper?>{
+    private fun isImageUriValid(productImageUri: String): Pair<Boolean, ProductValidationError>{
         if (productImageUri.isEmpty()) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.image_uri_empty_error_message)
+                ProductValidationError.MUST_SELECT_IMAGE_FOR_PRODUCT
             )
         }
 
-        return Pair(true, null)
+        return Pair(true, ProductValidationError.NONE)
     }
 
-    private fun isTypeValid(productType: String): Pair<Boolean, StringWrapper?> {
+    private fun isTypeValid(productType: String): Pair<Boolean, ProductValidationError> {
         if (productType.isEmpty()) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.type_empty_error_message)
+                ProductValidationError.TYPE_CANNOT_BE_EMPTY
             )
         }
 
-        return Pair(true, null)
+        return Pair(true, ProductValidationError.NONE)
     }
 
-    private fun isStockStatusValid(productStockStatus: String): Pair<Boolean, StringWrapper?> {
+    private fun isStockStatusValid(productStockStatus: String): Pair<Boolean, ProductValidationError> {
 
         if (productStockStatus.isEmpty()) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.stock_status_empty_error_message)
+                ProductValidationError.STOCK_STATUS_CANNOT_BE_EMPTY
             )
         }
 
-        return Pair(true, null)
+        return Pair(true, ProductValidationError.NONE)
     }
 
-    private fun isQuantityValid(productQuantity: String): Pair<Boolean, StringWrapper?> {
+    private fun isQuantityValid(productQuantity: String): Pair<Boolean, ProductValidationError> {
 
         val quantity = productQuantity.trim()
 
@@ -171,21 +170,21 @@ class ValidationService @Inject constructor() : IValidationService {
         } catch (e: NumberFormatException) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.quantity_format_error_message)
+                ProductValidationError.QUANTITY_MUST_BE_WHOLE_NUMBER
             )
         }
 
         if(quantity.toInt() <= 0){
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.quantity_negative_number_error_message)
+                ProductValidationError.QUANTITY_CANNOT_BE_NEGATIVE
             )
         }
 
-        return Pair(true, null)
+        return Pair(true, ProductValidationError.NONE)
     }
 
-    private fun isWeightValid(productWeight: String): Pair<Boolean, StringWrapper?> {
+    private fun isWeightValid(productWeight: String): Pair<Boolean, ProductValidationError> {
 
         val weight = productWeight.trim()
 
@@ -194,21 +193,21 @@ class ValidationService @Inject constructor() : IValidationService {
         } catch (e: NumberFormatException) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.weight_format_error_message)
+                ProductValidationError.WEIGHT_MUST_BE_DECIMAL_NUMBER
             )
         }
 
         if(weight.toDouble() <= 0.0){
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.weight_negative_number_error_message)
+                ProductValidationError.WEIGHT_CANNOT_BE_NEGATIVE
             )
         }
 
-        return Pair(true, null)
+        return Pair(true, ProductValidationError.NONE)
     }
 
-    private fun isWarrantyValid(productWarranty: String): Pair<Boolean, StringWrapper?> {
+    private fun isWarrantyValid(productWarranty: String): Pair<Boolean, ProductValidationError> {
 
         val warranty = productWarranty.trim()
 
@@ -217,42 +216,42 @@ class ValidationService @Inject constructor() : IValidationService {
         } catch (e: NumberFormatException) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.warranty_format_error_message)
+                ProductValidationError.WARRANTY_MUST_BE_WHOLE_NUMBER
             )
         }
 
         if(warranty.toInt() <= 0){
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.warranty_negative_number_error_message)
+                ProductValidationError.WARRANTY_CANNOT_BE_NEGATIVE
             )
         }
 
-        return Pair(true, null)
+        return Pair(true, ProductValidationError.NONE)
     }
 
-    private fun isBrandValid(productBrand: String): Pair<Boolean, StringWrapper?> {
+    private fun isBrandValid(productBrand: String): Pair<Boolean, ProductValidationError> {
 
         val brand = productBrand.trim()
 
         if (brand.isEmpty()) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.brand_empty_error_message)
+                ProductValidationError.BRAND_CANNOT_BE_EMPTY
             )
         }
 
         if (brand.length < 3) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.brand_not_enough_characters_error_message)
+                ProductValidationError.BRAND_CANNOT_BE_LESS_THAN_THREE_CHARACTERS
             )
         }
 
-        return Pair(true, null)
+        return Pair(true, ProductValidationError.NONE)
     }
 
-    private fun isPriceValid(productPrice: String): Pair<Boolean, StringWrapper?> {
+    private fun isPriceValid(productPrice: String): Pair<Boolean, ProductValidationError> {
 
         val price = productPrice.trim()
 
@@ -261,21 +260,21 @@ class ValidationService @Inject constructor() : IValidationService {
         } catch (e: NumberFormatException) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.price_format_error_message)
+                ProductValidationError.PRICE_MUST_BE_DECIMAL_NUMBER
             )
         }
 
         if(price.toDouble() <= 0.0){
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.price_negative_number_error_message)
+                ProductValidationError.PRICE_CANNOT_BE_NEGATIVE
             )
         }
 
-        return Pair(true, null)
+        return Pair(true, ProductValidationError.NONE)
     }
 
-    private fun isManufactureYearValid(productManufactureYear: String): Pair<Boolean, StringWrapper?> {
+    private fun isManufactureYearValid(productManufactureYear: String): Pair<Boolean, ProductValidationError> {
 
         val manufactureYear = productManufactureYear.trim()
 
@@ -284,7 +283,7 @@ class ValidationService @Inject constructor() : IValidationService {
         } catch (e: NumberFormatException) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.manufacture_year_format_error_message)
+                ProductValidationError.MANUFACTURE_YEAR_MUST_BE_WHOLE_NUMBER
             )
         }
 
@@ -299,41 +298,39 @@ class ValidationService @Inject constructor() : IValidationService {
         if(countDigits != 4){
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.manufacture_year_number_digits_error_message)
+                ProductValidationError.MANUFACTURE_YEAR_MUST_HAVE_FOUR_DIGITS
             )
         }
 
         if(manufactureYear.toInt() < 1900 || manufactureYear.toInt() > Calendar.getInstance().get(Calendar.YEAR)){
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.manufacture_year_range_error_message,
-                    arrayOf(Calendar.getInstance().get(Calendar.YEAR))
-                )
+                ProductValidationError.MANUFACTURE_YEAR_OUT_OF_RANGE
             )
         }
 
-        return Pair(true, null)
+        return Pair(true, ProductValidationError.NONE)
     }
 
-    private fun isNameInValid(productName: String): Pair<Boolean, StringWrapper?> {
+    private fun isNameInValid(productName: String): Pair<Boolean, ProductValidationError> {
 
         val name = productName.trim()
 
         if (name.isEmpty()) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.name_empty_error_message)
+                ProductValidationError.NAME_CANNOT_BE_EMPTY
             )
         }
 
         if (name.length < 3) {
             return Pair(
                 false,
-                StringWrapper.ResourceStringWrapper(id = R.string.name_not_enough_characters_error_message)
+                ProductValidationError.NAME_CANNOT_BE_LESS_THAN_THREE_CHARACTERS
             )
         }
 
-        return Pair(true, null)
+        return Pair(true, ProductValidationError.NONE)
     }
 
 }
