@@ -50,7 +50,7 @@ class FirebaseStorageDataSource @Inject constructor() : IFirebaseDataSource {
         uploadTask
             .addOnFailureListener {
                 continuation.resume(
-                    FirebaseStorageResult.Error(it,it.message ?: "An error occurred while uploading the image to Firebase Storage"),
+                    FirebaseStorageResult.Error(it),
                     onCancellation
                 )
             }
@@ -59,7 +59,7 @@ class FirebaseStorageDataSource @Inject constructor() : IFirebaseDataSource {
                     task.exception?.let {
                         //throw it
                         continuation.resume(
-                            FirebaseStorageResult.Error(it,it.message ?: "An error occurred while uploading the image to Firebase Storage"),
+                            FirebaseStorageResult.Error(it),
                             onCancellation
                         )
                     }
@@ -75,7 +75,7 @@ class FirebaseStorageDataSource @Inject constructor() : IFirebaseDataSource {
                 } else {
                     if(!continuation.isCompleted){
                         continuation.resume(
-                            FirebaseStorageResult.Error( task.exception ?: Exception("Download Url Exception") ,task.exception?.message ?: "An error occurred while retrieving downloadUrl from Firebase Storage"),
+                            FirebaseStorageResult.Error(task.exception),
                             onCancellation
                         )
                     }
@@ -98,13 +98,13 @@ class FirebaseStorageDataSource @Inject constructor() : IFirebaseDataSource {
         deleteTask
             .addOnSuccessListener {
                 continuation.resume(
-                    FirebaseStorageResult.Success(""),
+                    FirebaseStorageResult.Success(null),
                     onCancellation
                 )
             }
             .addOnFailureListener {
                 continuation.resume(
-                    FirebaseStorageResult.Error(it,it.message ?: "An error occurred while uploading the image to Firebase Storage"),
+                    FirebaseStorageResult.Error(it),
                     onCancellation
                 )
             }
@@ -116,6 +116,6 @@ class FirebaseStorageDataSource @Inject constructor() : IFirebaseDataSource {
 }
 
 sealed class FirebaseStorageResult {
-    class Success(val downloadUrl: String): FirebaseStorageResult()
-    class Error(val exception: Exception, val error: String): FirebaseStorageResult()
+    class Success(val downloadUrl: String? = null): FirebaseStorageResult()
+    class Error(val exception: Exception? = null): FirebaseStorageResult()
 }

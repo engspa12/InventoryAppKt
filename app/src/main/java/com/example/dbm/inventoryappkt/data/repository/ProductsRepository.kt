@@ -1,7 +1,6 @@
 package com.example.dbm.inventoryappkt.data.repository
 
 import android.net.Uri
-import android.util.Log
 import com.example.dbm.inventoryappkt.data.local.datasource.ProductsDao
 import com.example.dbm.inventoryappkt.data.local.model.ProductCache
 import com.example.dbm.inventoryappkt.data.network.datasource.FirebaseStorageResult
@@ -39,7 +38,7 @@ class ProductsRepository @Inject constructor(
         }
     }
 
-    override suspend fun addProduct(productDomain: ProductDomain): ResultWrapper<Unit> {
+    override suspend fun addProduct(productDomain: ProductDomain): ResultWrapper<Unit, Nothing> {
         return withContext(dispatcher) {
             if(productDomain.isDummyProduct){
                 val productCache = cacheMapper.mapFromDomainModel(productDomain)
@@ -48,13 +47,12 @@ class ProductsRepository @Inject constructor(
             } else {
                 when(val result = networkDataSource.uploadImageToStorage(Uri.parse(productDomain.imageUriInDeviceString))) {
                     is FirebaseStorageResult.Success -> {
-                        productDomain.imageUrl = result.downloadUrl
+                        productDomain.imageUrl = result.downloadUrl.orEmpty()
                         val productCache = cacheMapper.mapFromDomainModel(productDomain)
                         localDataSource.saveProduct(productCache)
                         ResultWrapper.Success(Unit)
                     }
                     is FirebaseStorageResult.Error -> {
-                        Log.e("ProductsRepository", result.error)
                         ResultWrapper.Failure(exception = result.exception)
                     }
                 }
@@ -70,7 +68,7 @@ class ProductsRepository @Inject constructor(
         }
     }
 
-    override suspend fun deleteProduct(productId: Int): ResultWrapper<Unit> {
+    override suspend fun deleteProduct(productId: Int): ResultWrapper<Unit, Nothing> {
         return withContext(dispatcher) {
             val product = getProductById(productId)
             if(product.isDummyProduct){
@@ -83,7 +81,6 @@ class ProductsRepository @Inject constructor(
                         ResultWrapper.Success(Unit)
                     }
                     is FirebaseStorageResult.Error -> {
-                        Log.e("ProductsRepository", result.error)
                         ResultWrapper.Failure(exception = result.exception)
                     }
                 }
