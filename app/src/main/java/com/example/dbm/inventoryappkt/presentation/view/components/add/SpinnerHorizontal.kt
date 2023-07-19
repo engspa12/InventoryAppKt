@@ -8,19 +8,21 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.example.dbm.inventoryappkt.util.StringWrapper
+import com.example.dbm.inventoryappkt.presentation.util.getStringResourceForType
+import com.example.dbm.inventoryappkt.presentation.util.toType
 
 @Composable
-fun SpinnerHorizontal(
+inline fun <reified T> SpinnerHorizontal(
     text: String,
-    options: Map<String, StringWrapper>,
+    options: Map<String, Int>,
     fontSize: TextUnit,
     fontWeight: FontWeight,
-    itemSelected: StringWrapper,
-    onItemSelected: (Map.Entry<String, StringWrapper>) -> Unit,
+    itemSelected: T,
+    crossinline onItemSelected: (T) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -56,7 +58,7 @@ fun SpinnerHorizontal(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = itemSelected.asString(),
+                    text = stringResource(id = itemSelected.getStringResourceForType()),
                     color = MaterialTheme.colors.onPrimary,
                     fontSize = fontSize,
                     fontWeight = fontWeight
@@ -72,12 +74,12 @@ fun SpinnerHorizontal(
                 for (item in options) {
                     DropdownMenuItem(
                         onClick = {
-                            onItemSelected(item)
+                            onItemSelected(item.key.toType(itemSelected))
                             isExpanded = false
                         }
                     ) {
                         Text(
-                            text = item.value.asString()
+                            text = stringResource(id = item.value)
                         )
                     }
                 }

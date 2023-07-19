@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
+import com.example.dbm.inventoryappkt.presentation.util.mapToStringResource
 
 @Composable
 fun AddNewProductContent(
@@ -173,7 +174,7 @@ fun AddNewProductContent(
                 options = inputState.categoryOptions,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W600,
-                itemSelected = inputState.productTypeText,
+                itemSelected = inputState.productType,
                 onItemSelected = {
                     onChangeEvent(ProductDetailsChangeEvent.TypeChanged(it))
                 },
@@ -190,7 +191,7 @@ fun AddNewProductContent(
                 options = inputState.stockStatusOptions,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W600,
-                itemSelected = inputState.productStockStatusText,
+                itemSelected = inputState.productStockStatus,
                 onItemSelected = {
                     onChangeEvent(ProductDetailsChangeEvent.StockStatusChanged(it))
                 },

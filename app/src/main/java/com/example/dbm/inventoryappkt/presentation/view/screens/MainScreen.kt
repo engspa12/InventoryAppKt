@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.dbm.inventoryappkt.presentation.state.MainState
 import com.example.dbm.inventoryappkt.presentation.util.MainEvent
@@ -55,12 +56,12 @@ fun MainScreen(
         }
     }
 
-    when(uiState) {
+    when(val state = uiState) {
         is MainState.Success -> {
             onContentNotAvailable(false)
             ProductsList(
                 lazyListState = lazyListState,
-                list = uiState.value,
+                list = state.value,
                 onItemClicked = { productId ->
                     navigateToDetailsScreen(productId)
                 },
@@ -72,10 +73,10 @@ fun MainScreen(
                 }
             )
         }
-        is MainState.Loading -> {
+        is MainState.LoadingRemovingProduct, MainState.LoadingProducts, MainState.LoadingDummyProduct -> {
             onContentNotAvailable(true)
             ProgressBar(
-                message = uiState.loadingMessage.asString(),
+                message = stringResource(id = state.mapToStringResource()),
                 modifier = Modifier
                     .fillMaxSize()
                     .wrapContentHeight(Alignment.CenterVertically)

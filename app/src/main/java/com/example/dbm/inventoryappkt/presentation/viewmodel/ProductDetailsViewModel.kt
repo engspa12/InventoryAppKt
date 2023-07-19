@@ -2,7 +2,6 @@ package com.example.dbm.inventoryappkt.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
 import com.example.dbm.inventoryappkt.domain.service.IUserService
@@ -11,7 +10,6 @@ import com.example.dbm.inventoryappkt.domain.util.ProductModification
 import com.example.dbm.inventoryappkt.presentation.state.ProductDetailsState
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsActionEvent
 import com.example.dbm.inventoryappkt.util.ResultWrapper
-import com.example.dbm.inventoryappkt.util.StringWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
@@ -29,7 +27,7 @@ class ProductDetailsViewModel @Inject constructor(
     @DispatchersModule.MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow<ProductDetailsState>(ProductDetailsState.Loading(StringWrapper.ResourceStringWrapper(id = R.string.loading_product_details)))
+    private val _uiState = MutableStateFlow<ProductDetailsState>(ProductDetailsState.LoadingProductDetails)
     val uiState: StateFlow<ProductDetailsState> = _uiState
 
     private val _productDetailsActionEvent = Channel<ProductDetailsActionEvent>()
@@ -43,7 +41,7 @@ class ProductDetailsViewModel @Inject constructor(
     }
 
     fun deleteProduct(productId: Int){
-        showProgressBar(R.string.loading_deleting_product)
+        showProgressBar(isProductUpdate = false)
         viewModelScope.launch(mainDispatcher) {
             userService.getUserId().collect { userId ->
                 if(!userId.isNullOrEmpty()) {
@@ -76,7 +74,7 @@ class ProductDetailsViewModel @Inject constructor(
     }
 
     fun updateProduct(productId: Int){
-        showProgressBar(R.string.loading_updating_product)
+        showProgressBar(isProductUpdate = true)
         viewModelScope.launch(mainDispatcher) {
             productsService.saveModifiedProduct(productId)
             delay(1000L)
@@ -84,8 +82,8 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun showProgressBar(resourceId: Int){
-        _uiState.value = ProductDetailsState.Loading(StringWrapper.ResourceStringWrapper(id = resourceId))
+    private fun showProgressBar(isProductUpdate: Boolean){
+        _uiState.value = if(isProductUpdate) ProductDetailsState.LoadingUpdating else ProductDetailsState.LoadingRemoving
     }
 
     fun increaseProductQuantity() {

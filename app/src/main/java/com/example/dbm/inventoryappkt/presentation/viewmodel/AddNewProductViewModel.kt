@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
 import com.example.dbm.inventoryappkt.domain.service.IUserService
@@ -17,7 +16,6 @@ import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
 import com.example.dbm.inventoryappkt.presentation.util.ValidationEvent
 import com.example.dbm.inventoryappkt.presentation.util.ValidationEventError
 import com.example.dbm.inventoryappkt.util.ResultWrapper
-import com.example.dbm.inventoryappkt.util.StringWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
@@ -38,8 +36,8 @@ class AddNewProductViewModel @Inject constructor(
     var uiState by mutableStateOf(ProductInputState())
         private set
 
-    private val _progressBarMessage = MutableStateFlow<StringWrapper?>(null)
-    val progressBarMessage: StateFlow<StringWrapper?> = _progressBarMessage
+    private val _showProgressBar = MutableStateFlow<Boolean?>(null)
+    val showProgressBar: StateFlow<Boolean?> = _showProgressBar
 
     private val _validationEvent = Channel<ValidationEvent>()
     val validationEvent = _validationEvent.receiveAsFlow()
@@ -62,10 +60,10 @@ class AddNewProductViewModel @Inject constructor(
                 uiState = uiState.copy(productQuantity = event.quantity)
             }
             is ProductDetailsChangeEvent.StockStatusChanged -> {
-                uiState = uiState.copy(productStockStatus = event.stockStatus.key, productStockStatusText = event.stockStatus.value)
+                uiState = uiState.copy(productStockStatus = event.stockStatus)
             }
             is ProductDetailsChangeEvent.TypeChanged -> {
-                uiState = uiState.copy(productType = event.type.key, productTypeText = event.type.value)
+                uiState = uiState.copy(productType = event.type)
             }
             is ProductDetailsChangeEvent.WarrantyChanged -> {
                 uiState = uiState.copy(productWarranty = event.warranty)
@@ -80,11 +78,11 @@ class AddNewProductViewModel @Inject constructor(
     }
 
     private fun showProgressBar(){
-        _progressBarMessage.value = StringWrapper.ResourceStringWrapper(id = R.string.loading_adding_product)
+        _showProgressBar.value = true
     }
 
     private fun hideProgressBar(){
-        _progressBarMessage.value = null
+        _showProgressBar.value = null
     }
 
     fun addNewProduct() {
@@ -159,6 +157,4 @@ class AddNewProductViewModel @Inject constructor(
             )
         )
     }
-
-
 }

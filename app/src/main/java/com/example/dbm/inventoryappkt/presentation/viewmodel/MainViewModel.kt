@@ -2,14 +2,12 @@ package com.example.dbm.inventoryappkt.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.di.DispatchersModule
 import com.example.dbm.inventoryappkt.domain.service.IProductsService
 import com.example.dbm.inventoryappkt.domain.util.ProductDomainError
 import com.example.dbm.inventoryappkt.presentation.state.MainState
 import com.example.dbm.inventoryappkt.presentation.util.MainEvent
 import com.example.dbm.inventoryappkt.util.ResultWrapper
-import com.example.dbm.inventoryappkt.util.StringWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
@@ -26,7 +24,7 @@ class MainViewModel @Inject constructor(
     @DispatchersModule.MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow<MainState>(MainState.Loading(StringWrapper.ResourceStringWrapper(id = R.string.loading_products)))
+    private val _uiState = MutableStateFlow<MainState>(MainState.LoadingProducts)
     val uiState: StateFlow<MainState> = _uiState
 
     private val _mainEvent = Channel<MainEvent>()
@@ -45,8 +43,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun showProgressBar(resourceId: Int){
-        _uiState.value = MainState.Loading(StringWrapper.ResourceStringWrapper(id = resourceId))
+    private fun showProgressBar(showLoadingDummy: Boolean){
+        _uiState.value = if(showLoadingDummy) MainState.LoadingDummyProduct else MainState.LoadingRemovingProduct
     }
 
     fun updateProductQuantity(productId: Int){
@@ -59,7 +57,7 @@ class MainViewModel @Inject constructor(
 
     fun deleteProduct(productId: Int) {
 
-        showProgressBar(R.string.loading_deleting_product)
+        showProgressBar(showLoadingDummy = false)
 
         viewModelScope.launch(mainDispatcher) {
             when(val result = productsService.deleteProduct(productId)) {
@@ -88,7 +86,7 @@ class MainViewModel @Inject constructor(
 
     fun insertDummyProduct() {
 
-        showProgressBar(R.string.loading_adding_dummy_product)
+        showProgressBar(showLoadingDummy = true)
 
         viewModelScope.launch(mainDispatcher) {
             productsService.insertDummyProduct()

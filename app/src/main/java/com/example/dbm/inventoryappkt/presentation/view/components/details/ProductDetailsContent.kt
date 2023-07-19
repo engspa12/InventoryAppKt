@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.presentation.model.ProductDetailsView
+import com.example.dbm.inventoryappkt.presentation.util.mapToStringResource
 
 @Composable
 fun ProductDetailsContent(
@@ -116,7 +117,7 @@ fun ProductDetailsContent(
                 title = stringResource(id = R.string.product_type),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W600,
-                value = item.productType.asString(),
+                value = stringResource(id = item.productType.mapToStringResource()) ,
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)
@@ -129,7 +130,7 @@ fun ProductDetailsContent(
                 title = stringResource(id = R.string.stock_status),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W600,
-                value = item.productInStock.asString(),
+                value = stringResource(id = item.productInStock.mapToStringResource()),
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .border(width = 2.dp, color = MaterialTheme.colors.onPrimary)

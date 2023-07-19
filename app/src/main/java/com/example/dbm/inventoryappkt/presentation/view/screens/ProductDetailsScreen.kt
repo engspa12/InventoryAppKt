@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.presentation.state.ProductDetailsState
@@ -56,10 +57,10 @@ fun ProductDetailsScreen(
         }
     }
 
-    when(uiState) {
+    when(val state = uiState) {
         is ProductDetailsState.Success -> {
             onContentNotAvailable(false)
-            uiState.value?.let { productDetailsView ->
+            state.value?.let { productDetailsView ->
                 ProductDetailsContent(
                     item = productDetailsView,
                     onIncreaseQuantity = {
@@ -96,10 +97,10 @@ fun ProductDetailsScreen(
                 )
             }
         }
-        is ProductDetailsState.Loading -> {
+        is ProductDetailsState.LoadingProductDetails, ProductDetailsState.LoadingRemoving, ProductDetailsState.LoadingUpdating -> {
             onContentNotAvailable(true)
             ProgressBar(
-                message = uiState.loadingMessage.asString(),
+                message = stringResource(id = state.mapToStringResource()),
                 modifier = Modifier
                     .fillMaxSize()
                     .wrapContentHeight(Alignment.CenterVertically)

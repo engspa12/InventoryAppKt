@@ -4,6 +4,8 @@ import com.example.dbm.inventoryappkt.domain.model.ProductDomain
 import com.example.dbm.inventoryappkt.domain.util.ProductValidationError
 import com.example.dbm.inventoryappkt.domain.util.ProductValidationResult
 import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
+import com.example.dbm.inventoryappkt.presentation.util.ProductType
+import com.example.dbm.inventoryappkt.presentation.util.StockType
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -22,8 +24,6 @@ class ValidationService @Inject constructor() : IValidationService {
         val warrantyValidationResult = isWarrantyValid(inputState.productWarranty)
         val weightValidationResult = isWeightValid(inputState.productWeight)
         val quantityValidationResult = isQuantityValid(inputState.productQuantity)
-        val stockStatusValidationResult = isStockStatusValid(inputState.productStockStatus)
-        val typeValidationResult = isTypeValid(inputState.productType)
         val imageUrlStorageLocationValidationResult = isImageUriValid(inputState.productImageUriInDeviceString)
 
         if(!imageUrlStorageLocationValidationResult.first) {
@@ -74,22 +74,6 @@ class ValidationService @Inject constructor() : IValidationService {
             )
         }
 
-        if(!typeValidationResult.first){
-            return ProductValidationResult(
-                productDomain = null,
-                validationSuccessful = false,
-                errorType = typeValidationResult.second
-            )
-        }
-
-        if(!stockStatusValidationResult.first){
-            return ProductValidationResult(
-                productDomain = null,
-                validationSuccessful = false,
-                errorType = stockStatusValidationResult.second
-            )
-        }
-
         if(!warrantyValidationResult.first) {
             return ProductValidationResult(
                 productDomain = null,
@@ -113,9 +97,9 @@ class ValidationService @Inject constructor() : IValidationService {
             weight = inputState.productWeight.trim().toDouble(),
             price = inputState.productPrice.trim().toDouble(),
             quantity = inputState.productQuantity.trim().toInt(),
-            inStock = inputState.productStockStatus == "in_stock",
+            inStock = inputState.productStockStatus == StockType.IN_STOCK,
             name = inputState.productName.trim(),
-            type = inputState.productType,
+            type = getStringForProductType(inputState.productType),
             imageUrl = "",
             imageUriInDeviceString = inputState.productImageUriInDeviceString,
             isDummyProduct = false
@@ -127,34 +111,21 @@ class ValidationService @Inject constructor() : IValidationService {
             errorType = ProductValidationError.NONE)
     }
 
+    private fun getStringForProductType(productType: ProductType): String {
+        return when(productType) {
+            ProductType.SPORTS -> "sports"
+            ProductType.FURNITURE -> "furniture"
+            ProductType.CLOTHING -> "clothing"
+            ProductType.TECHNOLOGY -> "technology"
+            else -> "other"
+        }
+    }
+
     private fun isImageUriValid(productImageUri: String): Pair<Boolean, ProductValidationError>{
         if (productImageUri.isEmpty()) {
             return Pair(
                 false,
                 ProductValidationError.MUST_SELECT_IMAGE_FOR_PRODUCT
-            )
-        }
-
-        return Pair(true, ProductValidationError.NONE)
-    }
-
-    private fun isTypeValid(productType: String): Pair<Boolean, ProductValidationError> {
-        if (productType.isEmpty()) {
-            return Pair(
-                false,
-                ProductValidationError.TYPE_CANNOT_BE_EMPTY
-            )
-        }
-
-        return Pair(true, ProductValidationError.NONE)
-    }
-
-    private fun isStockStatusValid(productStockStatus: String): Pair<Boolean, ProductValidationError> {
-
-        if (productStockStatus.isEmpty()) {
-            return Pair(
-                false,
-                ProductValidationError.STOCK_STATUS_CANNOT_BE_EMPTY
             )
         }
 

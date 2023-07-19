@@ -2,6 +2,8 @@ package com.example.dbm.inventoryappkt.presentation.util
 
 import android.content.Context
 import com.example.dbm.inventoryappkt.R
+import com.example.dbm.inventoryappkt.presentation.state.MainState
+import com.example.dbm.inventoryappkt.presentation.state.ProductDetailsState
 import java.util.Calendar
 
 fun ProductDetailsActionEvent.mapToStringResource(): Int {
@@ -49,5 +51,73 @@ fun ValidationEvent.mapToStringResource(context: Context): String {
         ValidationEventError.MANUFACTURE_YEAR_OUT_OF_RANGE -> context.getString(R.string.manufacture_year_range_error_message, Calendar.getInstance().get(Calendar.YEAR))
         ValidationEventError.NAME_CANNOT_BE_EMPTY -> context.getString(R.string.name_empty_error_message)
         ValidationEventError.NAME_CANNOT_BE_LESS_THAN_THREE_CHARACTERS -> context.getString(R.string.name_not_enough_characters_error_message)
+    }
+}
+
+fun ProductType.mapToStringResource(): Int {
+    return when(this) {
+        ProductType.SPORTS -> R.string.sports_category
+        ProductType.TECHNOLOGY -> R.string.technology_category
+        ProductType.CLOTHING -> R.string.clothing_category
+        ProductType.FURNITURE -> R.string.furniture_category
+        ProductType.OTHER -> R.string.other_category
+    }
+}
+
+fun StockType.mapToStringResource(): Int {
+    return when(this) {
+        StockType.IN_STOCK -> R.string.in_stock_status
+        StockType.WITHOUT_STOCK -> R.string.without_stock_status
+    }
+}
+
+fun MainState.mapToStringResource(): Int {
+    return when(this){
+        is MainState.LoadingDummyProduct -> R.string.loading_adding_dummy_product
+        is MainState.LoadingProducts -> R.string.loading_products
+        is MainState.LoadingRemovingProduct-> R.string.loading_deleting_product
+        else -> R.string.error_unknown
+    }
+}
+
+fun ProductDetailsState.mapToStringResource(): Int {
+    return when(this) {
+        is ProductDetailsState.LoadingProductDetails -> R.string.loading_product_details
+        is ProductDetailsState.LoadingUpdating -> R.string.loading_updating_product
+        is ProductDetailsState.LoadingRemoving -> R.string.loading_deleting_product
+        else -> R.string.error_unknown
+    }
+}
+
+fun <T> T.getStringResourceForType(): Int {
+    return when(this){
+        is ProductType -> mapToStringResource()
+        is StockType -> mapToStringResource()
+        else -> R.string.error_unknown
+    }
+}
+
+inline fun <reified T> String.toType(input: T): T {
+    return when(input) {
+        is ProductType -> toProductType() as T
+        is StockType -> toStockType() as T
+        else -> input
+    }
+}
+
+fun String.toProductType(): ProductType {
+    return when(this) {
+        "sports" -> ProductType.SPORTS
+        "technology" -> ProductType.TECHNOLOGY
+        "furniture" -> ProductType.FURNITURE
+        "clothing" -> ProductType.CLOTHING
+        else -> ProductType.OTHER
+    }
+}
+
+fun String.toStockType(): StockType {
+    return when(this){
+        "in_stock" -> StockType.IN_STOCK
+        else -> StockType.WITHOUT_STOCK
     }
 }

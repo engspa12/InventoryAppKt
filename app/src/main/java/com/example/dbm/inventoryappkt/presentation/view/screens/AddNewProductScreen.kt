@@ -14,7 +14,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
 import com.example.dbm.inventoryappkt.presentation.util.ValidationEvent
 import com.example.dbm.inventoryappkt.presentation.util.mapToStringResource
@@ -33,7 +35,7 @@ fun AddNewProductScreen(
 ) {
 
     val inputState = viewModel.uiState
-    val progressBarMessage by viewModel.progressBarMessage.collectAsStateWithLifecycle()
+    val showProgressBar by viewModel.showProgressBar.collectAsStateWithLifecycle()
     var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     val launcher =
@@ -77,7 +79,7 @@ fun AddNewProductScreen(
         }
     }
 
-    if (progressBarMessage == null) {
+    if (showProgressBar == null) {
         onContentNotAvailable(false)
         AddNewProductContent(
             bitmap = bitmap,
@@ -91,14 +93,12 @@ fun AddNewProductScreen(
         )
     } else {
         onContentNotAvailable(true)
-        progressBarMessage?.asString()?.let {
-            ProgressBar(
-                message = it,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentHeight(Alignment.CenterVertically)
-            )
-        }
+        ProgressBar(
+            message = stringResource(id = R.string.loading_adding_product),
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentHeight(Alignment.CenterVertically)
+        )
     }
 
 }
