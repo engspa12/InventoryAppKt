@@ -2,8 +2,6 @@ package com.example.dbm.inventoryappkt.domain.usecase
 
 import com.example.dbm.inventoryappkt.domain.model.ProductDomain
 import com.example.dbm.inventoryappkt.domain.repository.IProductsRepository
-import com.example.dbm.inventoryappkt.presentation.model.ProductDetailsView
-import com.example.dbm.inventoryappkt.presentation.model.ProductListView
 import javax.inject.Inject
 
 interface IGetProductByIdUseCase {

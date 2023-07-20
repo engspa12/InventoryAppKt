@@ -1,10 +1,18 @@
 package com.example.dbm.inventoryappkt.presentation.view.components.add
 
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
@@ -22,7 +30,6 @@ import androidx.compose.ui.unit.sp
 import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.presentation.state.ProductInputState
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsChangeEvent
-import com.example.dbm.inventoryappkt.presentation.util.mapToStringResource
 
 @Composable
 fun AddNewProductContent(

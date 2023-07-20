@@ -3,8 +3,11 @@ package com.example.dbm.inventoryappkt.presentation.view.screens
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -13,8 +16,8 @@ import com.example.dbm.inventoryappkt.R
 import com.example.dbm.inventoryappkt.presentation.state.ProductDetailsState
 import com.example.dbm.inventoryappkt.presentation.util.ProductDetailsActionEvent
 import com.example.dbm.inventoryappkt.presentation.util.mapToStringResource
-import com.example.dbm.inventoryappkt.presentation.view.components.details.*
-import com.example.dbm.inventoryappkt.presentation.view.components.shared.*
+import com.example.dbm.inventoryappkt.presentation.view.components.details.ProductDetailsContent
+import com.example.dbm.inventoryappkt.presentation.view.components.shared.ProgressBar
 import com.example.dbm.inventoryappkt.presentation.viewmodel.ProductDetailsViewModel
 
 @Composable

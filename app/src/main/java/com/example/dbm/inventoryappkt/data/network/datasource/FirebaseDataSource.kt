@@ -8,7 +8,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 interface IFirebaseDataSource {

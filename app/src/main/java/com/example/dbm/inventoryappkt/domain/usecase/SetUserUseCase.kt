@@ -1,7 +1,6 @@
 package com.example.dbm.inventoryappkt.domain.usecase
 
 import com.example.dbm.inventoryappkt.domain.repository.IUserRepository
-import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 
 interface ISetUserIdUseCase {

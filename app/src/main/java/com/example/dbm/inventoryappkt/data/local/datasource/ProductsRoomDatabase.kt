@@ -1,6 +1,12 @@
 package com.example.dbm.inventoryappkt.data.local.datasource
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Database
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.RoomDatabase
+import androidx.room.Update
 import com.example.dbm.inventoryappkt.data.local.model.ProductCache
 
 @Database(
